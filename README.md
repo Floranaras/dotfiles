@@ -1,12 +1,48 @@
-# My Dotfiles
+# My Dotfiles - Hyprland Anime-Inspired Rice
 
-This repository contains my personal configuration files (dotfiles) for various applications and tools I use. These configurations help me maintain a consistent and efficient working environment across different machines, with a focus on a modern Wayland-based desktop setup.
+> A beautiful, minimal, and expressive Hyprland setup themed around a serene anime night sky
+
+This repository contains my personal configuration files (dotfiles) for various applications and tools I use. These configurations help me maintain a consistent and efficient working environment across different machines, with a focus on an **anime-style aesthetic** featuring deep blues, rich purples, and gentle pinks painting the horizon.
+
+> Just something I did for fun with an old laptop a family member had — they got a new one, so I gave this machine a new life. It's running Arch Linux, by the way.
+
+## Theme Overview
+
+This setup embraces an **anime-style aesthetic** with a character gazing at a **stunning starry night sky**. It's designed for **beauty and clarity**, ideal for those who want a peaceful yet functional workspace.
+
+* **Color Palette**: Deep blue, purple, subtle pink
+* **Compositor**: [Hyprland](https://github.com/hyprwm/Hyprland)
+* **Launcher**: Wofi with custom styling
+* **Status Bar**: Waybar, clean and themed
+* **Terminal**: Ghostty with custom configuration
+* **Editor**: Neovim with complete plugin setup
+* **Shell**: Zsh with custom configuration
+* **Wallpaper**: Managed by Hyprpaper
+
+---
+
+## Screenshots
+
+### Desktop Overview
+![Screenshot 1](images/screenshot1.png)
+
+---
+
+### Wofi Launcher
+![Screenshot 2](images/screenshot2.png)
+
+---
+
+### Waybar + Window Management
+![Screenshot 3](images/screenshot3.png)
+
+---
 
 ## What's Included
 
 - **Hyprland**: Wayland compositor configuration with custom keybinds, window rules, and animations
-- **Waybar**: Status bar configuration with custom styling and modules
-- **Wofi**: Application launcher configuration and styling
+- **Waybar**: Status bar configuration with anime-themed styling
+- **Wofi**: Application launcher with custom styling to match the theme
 - **Ghostty**: Modern terminal emulator configuration
 - **Neovim**: Complete editor setup with LSP, plugins, and custom keymaps
 - **Zsh**: Shell configuration and customizations
@@ -23,11 +59,13 @@ Before you begin, ensure you have the following installed on your system:
 
 - **The applications themselves**: Make sure you have the relevant applications installed:
   - **Hyprland**: Dynamic tiling Wayland compositor
+  - **hyprpaper**: Wallpaper utility for Hyprland
   - **Waybar**: Highly customizable Wayland bar
   - **Wofi**: Application launcher for wlroots-based compositors
   - **Ghostty**: Fast, feature-rich terminal emulator
   - **Neovim**: Hyperextensible Vim-based text editor
   - **Zsh**: Extended Bourne shell with improvements
+  - **Nerd Font** (e.g. `FiraCode Nerd Font`)
 
 ## Installation
 
@@ -48,9 +86,21 @@ To set up these dotfiles, follow these steps:
 
    **For Hyprland configuration:**
    ```bash
-   stow hyprland
+   stow hypr
    ```
    This will link the Hyprland configuration files to `~/.config/hypr/`
+
+   **For Waybar configuration:**
+   ```bash
+   stow waybar
+   ```
+   This will link the Waybar configuration to `~/.config/waybar/`
+
+   **For Wofi configuration:**
+   ```bash
+   stow wofi
+   ```
+   This will link the Wofi configuration to `~/.config/wofi/`
 
    **For Neovim configuration:**
    ```bash
@@ -68,38 +118,42 @@ To set up these dotfiles, follow these steps:
    ```bash
    stow zsh
    ```
-   This will link zsh configuration files to your home directory
+   This will link the `.zshrc` file to your home directory
 
    **To install all configurations at once:**
    ```bash
    stow */
    ```
 
-## Configuration Highlights
+## Configuration Structure
 
-### Hyprland
-- Custom window rules and workspace management
-- Optimized animations and performance settings
-- Integrated with Waybar and Wofi
-- Custom wallpaper management with hyprpaper
-- Screenshot utilities and keybinds
-
-### Neovim
-- Lazy.nvim plugin manager setup
-- LSP configuration with Mason
-- Telescope fuzzy finder
-- File tree with nvim-tree
-- Auto-completion with nvim-cmp
-- Custom keymaps and options
-
-### Waybar
-- Custom modules for system monitoring
-- Styled to match the overall theme
-- Workspace indicators and system tray
-
-### Wofi
-- Custom styling to match the desktop theme
-- Optimized for quick application launching
+```bash
+.
+├── ghostty
+│   └── .config/ghostty/       # Ghostty terminal configuration
+├── hypr
+│   └── .config/hypr/
+│       ├── environment.conf   # Environment variables
+│       ├── hyprland.conf      # Main Hyprland config
+│       ├── hyprpaper.conf     # Wallpaper configuration
+│       └── wofi_launcher.sh   # Custom script for launching Wofi
+├── images
+│   ├── screenshot1.png        # Desktop overview
+│   ├── screenshot2.png        # Wofi launcher
+│   └── screenshot3.png        # Waybar and windows
+├── nvim
+│   └── .config/nvim/          # Complete Neovim setup with plugins
+├── waybar
+│   └── .config/waybar/
+│       ├── config             # Waybar main config
+│       └── style.css          # Anime-themed Waybar styling
+├── wofi
+│   └── .config/wofi/
+│       ├── config             # Wofi config
+│       └── style.css          # Custom Wofi style matching theme
+└── zsh
+    └── .zshrc                 # Zsh configuration
+```
 
 ## Usage
 
@@ -113,20 +167,40 @@ After stowing the configurations:
    hyprctl reload
    ```
 
-2. **For Neovim**, the plugins will be automatically installed on first launch thanks to Lazy.nvim
+2. **For Neovim**, the plugins will be automatically installed on first launch thanks to the plugin manager
 
 3. **Restart Waybar** if it's already running:
    ```bash
    killall waybar && waybar &
    ```
 
-## Customization
+### Launch Notes
 
-Feel free to modify these configurations to suit your preferences. The configurations are organized in a modular way:
+You can launch the custom Wofi with:
+```bash
+bash ~/.config/hypr/wofi_launcher.sh
+```
 
-- Hyprland configs are split into separate files for easy management
-- Neovim plugins are organized by functionality
-- Styling is separated from functionality where possible
+Make sure to set executable permissions if needed:
+```bash
+chmod +x ~/.config/hypr/wofi_launcher.sh
+```
+
+## Configuration Highlights
+
+### Neovim
+- Complete plugin setup for development
+- LSP configuration for code intelligence
+- Custom keymaps and options
+- Theme matching the overall aesthetic
+
+### Ghostty
+- Modern terminal emulator configuration
+- Custom styling and performance optimizations
+
+### Zsh
+- Enhanced shell experience with custom configurations
+- Improved productivity and aesthetics
 
 ## Troubleshooting
 
@@ -136,6 +210,7 @@ If you encounter issues:
    ```bash
    ls -la ~/.config/hypr/
    ls -la ~/.config/nvim/
+   ls -la ~/.config/waybar/
    ```
 
 2. **For Hyprland issues**, check the logs:
@@ -148,13 +223,72 @@ If you encounter issues:
    :checkhealth
    ```
 
-## Screenshots
+## Final Thoughts
 
-Check out the `hyprland/images/` directory for screenshots of the desktop setup in action!
+This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding or vibing with lofi, this desktop is your new starry refuge.
+
+> "Even the darkest nights will end, and the stars will shine again." ✨
+
+---
 
 ## Contributing
 
 If you have suggestions for improvements or find any issues, feel free to open an issue or submit a pull request.
+
+---
+
+## Hyprland Rice Showcase
+
+This dotfiles repository also features a **Hyprland Anime-Inspired Rice** — a beautiful, minimal, and expressive setup themed around a serene anime night sky with deep blues, rich purples, and gentle pinks painting the horizon.
+
+### Theme Overview
+
+* **Color Palette**: Deep blue, purple, subtle pink
+* **Compositor**: [Hyprland](https://github.com/hyprwm/Hyprland)
+* **Launcher**: Wofi with custom styling
+* **Status Bar**: Waybar, clean and themed
+* **Wallpaper**: Managed by Hyprpaper
+
+### Hyprland Configuration Features
+
+- Custom window rules and workspace management
+- Optimized animations matching the anime aesthetic
+- Integrated with Waybar and Wofi
+- Custom wallpaper management with hyprpaper
+- Anime-themed color scheme throughout
+
+### Waybar
+- Anime-themed styling with deep blues and purples
+- Custom modules for system monitoring
+- Clean, minimal design
+
+### Wofi
+- Custom styling matching the starry night theme
+- Optimized for quick application launching
+
+### Launch Notes
+
+You can launch the custom Wofi with:
+```bash
+bash ~/.config/hypr/wofi_launcher.sh
+```
+
+Make sure to set executable permissions if needed:
+```bash
+chmod +x ~/.config/hypr/wofi_launcher.sh
+```
+
+### Final Thoughts
+
+This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding or vibing with lofi, this desktop is your new starry refuge.
+
+> "Even the darkest nights will end, and the stars will shine again." ✨
+
+### Contact / Credit
+Crafted with love by **Callo**
+
+**Wallpaper by**: まころん / makoron
+[@makoron117117 on X (Twitter)](https://x.com/makoron117117)
 
 ## License
 
