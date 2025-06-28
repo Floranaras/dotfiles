@@ -73,7 +73,7 @@ To set up these dotfiles, follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/[your-username]/dotfiles.git ~/.dotfiles
+   git clone https://github.com/Floranaras/dotfiles.git ~/.dotfiles
    ```
 
 2. **Navigate to the dotfiles directory:**
