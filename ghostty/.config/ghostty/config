@@ -7,7 +7,7 @@ theme = rose-pine
 foreground = #ffffff
 background = #121212
 
-background-opacity = 0.95
+background-opacity = 0.65
 background-blur = 0
 
 # window settings

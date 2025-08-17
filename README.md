@@ -15,26 +15,17 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 * **Launcher**: Wofi with custom styling
 * **Status Bar**: Waybar, clean and themed
 * **Terminal**: Ghostty with custom configuration
+* **Terminal Multiplexer**: Tmux with anime-themed styling
 * **Editor**: Neovim with complete plugin setup
 * **Shell**: Zsh with custom configuration
 * **Wallpaper**: Managed by Hyprpaper
 
 ---
 
-## Screenshots
+## Screenshot
 
 ### Desktop Overview
-![Screenshot 1](images/screenshot1.png)
-
----
-
-### Wofi Launcher
-![Screenshot 2](images/screenshot2.png)
-
----
-
-### Waybar + Window Management
-![Screenshot 3](images/screenshot3.png)
+![Screenshot](images/screenshot.png)
 
 ---
 
@@ -44,6 +35,7 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 - **Waybar**: Status bar configuration with anime-themed styling
 - **Wofi**: Application launcher with custom styling to match the theme
 - **Ghostty**: Modern terminal emulator configuration
+- **Tmux**: Terminal multiplexer with custom styling and keybinds matching the anime theme
 - **Neovim**: Complete editor setup with LSP, plugins, and custom keymaps
 - **Zsh**: Shell configuration and customizations
 
@@ -51,244 +43,296 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 
 Before you begin, ensure you have the following installed on your system:
 
-- **stow**: A symbolic link farm manager used to manage dotfiles. You can install it via your distribution's package manager:
-  - Arch Linux: `sudo pacman -S stow`
-  - Debian/Ubuntu: `sudo apt-get install stow`
-  - Fedora: `sudo dnf install stow`
-  - macOS: `brew install stow`
+### Required Applications
+- **stow**: Symbolic link farm manager for dotfile management
+- **Hyprland**: Dynamic tiling Wayland compositor
+- **hyprpaper**: Wallpaper utility for Hyprland
+- **Waybar**: Highly customizable Wayland bar
+- **Wofi**: Application launcher for wlroots-based compositors
+- **Ghostty**: Fast, feature-rich terminal emulator
+- **Tmux**: Terminal multiplexer
+- **Neovim**: Hyperextensible Vim-based text editor
+- **Zsh**: Extended Bourne shell
+- **Nerd Font**: For proper icon display (JetBrains Mono Nerd Font recommended)
 
-- **The applications themselves**: Make sure you have the relevant applications installed:
-  - **Hyprland**: Dynamic tiling Wayland compositor
-  - **hyprpaper**: Wallpaper utility for Hyprland
-  - **Waybar**: Highly customizable Wayland bar
-  - **Wofi**: Application launcher for wlroots-based compositors
-  - **Ghostty**: Fast, feature-rich terminal emulator
-  - **Neovim**: Hyperextensible Vim-based text editor
-  - **Zsh**: Extended Bourne shell with improvements
-  - **Nerd Font** (e.g. `FiraCode Nerd Font`)
+### Additional Dependencies
+- **For Neovim**: unzip, Python3, clangd
+- **For Waybar**: Nerd Font symbols
+
+> ** Platform-specific installation instructions**: See the [Installation Guide](#installation-guide) section below for detailed commands for your operating system.
 
 ## Installation
-
-To set up these dotfiles, follow these steps:
 
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Floranaras/dotfiles.git ~/.dotfiles
-   ```
-
-2. **Navigate to the dotfiles directory:**
-   ```bash
    cd ~/.dotfiles
    ```
 
+2. **Install prerequisites** (see [Installation Guide](#installation-guide) below)
+
 3. **Use stow to create symbolic links:**
-   For each application or configuration directory in this repository, use `stow` to create the necessary symbolic links in your home directory.
-
-   **For Hyprland configuration:**
    ```bash
-   stow hypr
-   ```
-   This will link the Hyprland configuration files to `~/.config/hypr/`
-
-   **For Waybar configuration:**
-   ```bash
-   stow waybar
-   ```
-   This will link the Waybar configuration to `~/.config/waybar/`
-
-   **For Wofi configuration:**
-   ```bash
-   stow wofi
-   ```
-   This will link the Wofi configuration to `~/.config/wofi/`
-
-   **For Neovim configuration:**
-   ```bash
-   stow nvim
-   ```
-   This will link the Neovim configuration to `~/.config/nvim/`
-
-   **For Ghostty terminal:**
-   ```bash
-   stow ghostty
-   ```
-   This will link the Ghostty config to `~/.config/ghostty/`
-
-   **For Zsh configuration:**
-   ```bash
-   stow zsh
-   ```
-   This will link the `.zshrc` file to your home directory
-
-   **To install all configurations at once:**
-   ```bash
+   # Install individual configurations
+   stow hypr waybar wofi ghostty tmux nvim zsh
+   
+   # Or install everything at once
    stow */
+   ```
+
+4. **First-time setup:**
+   ```bash
+   # Reload Hyprland
+   hyprctl reload
+   
+   # Reload Tmux config (if already running)
+   tmux source-file ~/.tmux.conf
+   
+   # Restart Waybar (if already running)
+   killall waybar && waybar &
    ```
 
 ## Configuration Structure
 
 ```bash
 .
-├── ghostty
-│   └── .config/ghostty/       # Ghostty terminal configuration
-├── hypr
-│   └── .config/hypr/
-│       ├── environment.conf   # Environment variables
-│       ├── hyprland.conf      # Main Hyprland config
-│       ├── hyprpaper.conf     # Wallpaper configuration
-│       └── wofi_launcher.sh   # Custom script for launching Wofi
-├── images
-│   ├── screenshot1.png        # Desktop overview
-│   ├── screenshot2.png        # Wofi launcher
-│   └── screenshot3.png        # Waybar and windows
-├── nvim
-│   └── .config/nvim/          # Complete Neovim setup with plugins
-├── waybar
-│   └── .config/waybar/
-│       ├── config             # Waybar main config
-│       └── style.css          # Anime-themed Waybar styling
-├── wofi
-│   └── .config/wofi/
-│       ├── config             # Wofi config
-│       └── style.css          # Custom Wofi style matching theme
-└── zsh
-    └── .zshrc                 # Zsh configuration
+├── ghostty/      # Ghostty terminal configuration
+├── hypr/         # Hyprland configuration files
+├── images/       # Screenshot
+├── nvim/         # Complete Neovim setup with plugins
+├── tmux/         # Tmux configuration with anime theme
+├── waybar/       # Waybar config and anime-themed styling
+├── wofi/         # Wofi config and custom styling
+└── zsh/          # Zsh configuration
 ```
 
-## Usage
+## Installation Guide
 
-Once the symbolic links are created using `stow`, the respective applications will automatically pick up these configurations when you launch them.
+<details>
+<summary><strong> Arch Linux</strong></summary>
 
-### First Time Setup
-After stowing the configurations:
-
-1. **Restart your Hyprland session** or reload the configuration:
-   ```bash
-   hyprctl reload
-   ```
-
-2. **For Neovim**, the plugins will be automatically installed on first launch thanks to the plugin manager
-
-3. **Restart Waybar** if it's already running:
-   ```bash
-   killall waybar && waybar &
-   ```
-
-### Launch Notes
-
-You can launch the custom Wofi with:
 ```bash
-bash ~/.config/hypr/wofi_launcher.sh
+# Core dependencies
+sudo pacman -S stow unzip python python-pip clang tmux neovim zsh
+
+# Nerd fonts for Waybar
+sudo pacman -S ttf-nerd-fonts-symbols-mono ttf-jetbrains-mono-nerd
+
+# Hyprland ecosystem (if not already installed)
+sudo pacman -S hyprland hyprpaper waybar wofi
+
+# Ghostty (from AUR)
+yay -S ghostty
+# or
+paru -S ghostty
+```
+</details>
+
+<details>
+<summary><strong> Debian/Ubuntu</strong></summary>
+
+```bash
+# Core dependencies
+sudo apt update
+sudo apt install stow unzip python3 python3-pip clangd tmux neovim zsh
+
+# Nerd fonts for Waybar
+sudo apt install fonts-nerd-font-jetbrainsmono
+
+# Note: Hyprland, Waybar, Wofi, and Ghostty may need to be installed 
+# from their respective repositories or built from source
+```
+</details>
+
+<details>
+<summary><strong> Fedora/RHEL/CentOS</strong></summary>
+
+```bash
+# Core dependencies
+sudo dnf install stow unzip python3 python3-pip clang-tools-extra tmux neovim zsh
+
+# For Nerd fonts, download from nerdfonts.com or:
+sudo dnf install jetbrains-mono-fonts
+
+# Note: Hyprland ecosystem may need to be installed from source
+```
+</details>
+
+<details>
+<summary><strong> openSUSE</strong></summary>
+
+```bash
+# Core dependencies
+sudo zypper install stow unzip python3 python3-pip clang-tools tmux neovim zsh
+
+# For fonts
+sudo zypper install jetbrains-mono-fonts
+# Or download Nerd fonts from nerdfonts.com
+```
+</details>
+
+<details>
+<summary><strong> Alpine Linux</strong></summary>
+
+```bash
+# Core dependencies
+sudo apk add stow unzip python3 py3-pip clang-extra-tools tmux neovim zsh
+
+# Download Nerd fonts manually from nerdfonts.com
+```
+</details>
+
+<details>
+<summary><strong> Void Linux</strong></summary>
+
+```bash
+# Core dependencies
+sudo xbps-install -S stow unzip python3 python3-pip clang-tools-extra tmux neovim zsh
+
+# Fonts
+sudo xbps-install -S font-jetbrains-mono
+# Or download Nerd fonts from nerdfonts.com
+```
+</details>
+
+<details>
+<summary><strong> Gentoo</strong></summary>
+
+```bash
+# Core dependencies
+sudo emerge app-portage/stow app-arch/unzip dev-lang/python sys-devel/clang app-misc/tmux app-editors/neovim app-shells/zsh
+
+# Fonts
+sudo emerge media-fonts/jetbrains-mono
+# Or download Nerd fonts from nerdfonts.com
+```
+</details>
+
+<details>
+<summary><strong> NixOS</strong></summary>
+
+Add to your `configuration.nix`:
+```nix
+environment.systemPackages = with pkgs; [
+  stow unzip python3 clang-tools tmux neovim zsh
+  jetbrains-mono
+];
 ```
 
-Make sure to set executable permissions if needed:
+Or use `nix-env`:
 ```bash
-chmod +x ~/.config/hypr/wofi_launcher.sh
+nix-env -iA nixpkgs.stow nixpkgs.unzip nixpkgs.python3 nixpkgs.clang-tools nixpkgs.tmux nixpkgs.neovim nixpkgs.zsh
 ```
+</details>
+
+<details>
+<summary><strong> macOS</strong></summary>
+
+```bash
+# Install Homebrew if not already installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Core dependencies
+brew install stow python3 llvm tmux neovim zsh
+
+# Fonts (requires font cask)
+brew tap homebrew/cask-fonts
+brew install font-jetbrains-mono-nerd-font
+
+# Note: Hyprland is Linux-specific. Consider alternatives like yabai or Amethyst
+```
+</details>
+
+<details>
+<summary><strong> FreeBSD</strong></summary>
+
+```bash
+# Core dependencies
+pkg install stow unzip python3 llvm tmux neovim zsh
+
+# Fonts
+pkg install jetbrains-mono
+# Or download Nerd fonts from nerdfonts.com
+```
+</details>
+
+<details>
+<summary><strong> Windows</strong></summary>
+
+**Option 1: WSL (Recommended)**
+1. Install WSL2 and a Linux distribution
+2. Follow the Linux instructions for your chosen distro
+
+**Option 2: Native Windows**
+```powershell
+# Using winget
+winget install Python.Python.3
+winget install JetBrains.JetBrainsMono.NerdFont
+
+# Note: Most tools will need WSL, MSYS2, or manual installation
+# Hyprland is not available on Windows
+```
+</details>
 
 ## Configuration Highlights
 
+### Tmux
+- Custom status bar styling matching the anime theme
+- Optimized keybinds for productivity
+- Beautiful pane borders and window indicators
+
 ### Neovim
 - Complete plugin setup for development
-- LSP configuration for code intelligence
-- Custom keymaps and options
-- Theme matching the overall aesthetic
-
-### Ghostty
-- Modern terminal emulator configuration
-- Custom styling and performance optimizations
-
-### Zsh
-- Enhanced shell experience with custom configurations
-- Improved productivity and aesthetics
-
-## Troubleshooting
-
-If you encounter issues:
-
-1. **Check if stow created the links correctly:**
-   ```bash
-   ls -la ~/.config/hypr/
-   ls -la ~/.config/nvim/
-   ls -la ~/.config/waybar/
-   ```
-
-2. **For Hyprland issues**, check the logs:
-   ```bash
-   journalctl -f --user-unit hyprland
-   ```
-
-3. **For Neovim plugin issues**, run health checks:
-   ```
-   :checkhealth
-   ```
-
-## Final Thoughts
-
-This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding or vibing with lofi, this desktop is your new starry refuge.
-
-> "Even the darkest nights will end, and the stars will shine again." ✨
-
----
-
-## Contributing
-
-If you have suggestions for improvements or find any issues, feel free to open an issue or submit a pull request.
-
----
-
-## Hyprland Rice Showcase
-
-This dotfiles repository also features a **Hyprland Anime-Inspired Rice** — a beautiful, minimal, and expressive setup themed around a serene anime night sky with deep blues, rich purples, and gentle pinks painting the horizon.
-
-### Theme Overview
-
-* **Color Palette**: Deep blue, purple, subtle pink
-* **Compositor**: [Hyprland](https://github.com/hyprwm/Hyprland)
-* **Launcher**: Wofi with custom styling
-* **Status Bar**: Waybar, clean and themed
-* **Wallpaper**: Managed by Hyprpaper
-
-### Hyprland Configuration Features
-
-- Custom window rules and workspace management
-- Optimized animations matching the anime aesthetic
-- Integrated with Waybar and Wofi
-- Custom wallpaper management with hyprpaper
-- Anime-themed color scheme throughout
+- LSP configuration with clangd support
+- Custom keymaps and anime-themed styling
+- Auto-installs plugins on first launch
 
 ### Waybar
 - Anime-themed styling with deep blues and purples
 - Custom modules for system monitoring
-- Clean, minimal design
+- Requires Nerd Font symbols for proper icons
 
-### Wofi
-- Custom styling matching the starry night theme
-- Optimized for quick application launching
+### Ghostty & Zsh
+- Modern terminal with custom styling
+- Enhanced shell experience with productivity features
 
-### Launch Notes
+## Troubleshooting
 
-You can launch the custom Wofi with:
+**Check symbolic links:**
 ```bash
-bash ~/.config/hypr/wofi_launcher.sh
+ls -la ~/.config/{hypr,nvim,waybar,wofi,ghostty} ~/.tmux.conf ~/.zshrc
 ```
 
-Make sure to set executable permissions if needed:
+**For Neovim issues:**
 ```bash
-chmod +x ~/.config/hypr/wofi_launcher.sh
+# Run health checks
+nvim -c ":checkhealth"
+
+# Common issues: missing unzip, Python3, or clangd
 ```
 
-### Final Thoughts
+**For Hyprland issues:**
+```bash
+journalctl -f --user-unit hyprland
+```
 
-This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding or vibing with lofi, this desktop is your new starry refuge.
+**For Tmux issues:**
+```bash
+tmux show-options -g
+```
+
+## Final Thoughts
+
+This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding, managing multiple terminal sessions, or vibing with lofi, this desktop is your new starry refuge.
 
 > "Even the darkest nights will end, and the stars will shine again." ✨
 
 ### Contact / Credit
 Crafted with love by **Callo**
 
-**Wallpaper by**: まころん / makoron
-[@makoron117117 on X (Twitter)](https://x.com/makoron117117)
+## Contributing
+
+If you have suggestions for improvements or find any issues, feel free to open an issue or submit a pull request.
 
 ## License
 
