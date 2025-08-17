@@ -1,201 +1,102 @@
+@import url("/home/callo/.cache/wal/colors-waybar.css");
 * {
-    font-family: "JetBrains Mono Nerd Font", "Noto Sans", sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+  font-family: "DM Sans", "JetBrainsMono Nerd Font Propo", sans-serif;
+  font-size: 22px;
+  border-radius: 5px;
+  font-weight: bold;
 }
-
 window#waybar {
-    background: rgba(19, 25, 53, 0.75);
-    border-radius: 12px;
-    border-bottom: 3px solid rgba(114, 137, 218, 0.7);
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
-    background-image: 
-        linear-gradient(to bottom, 
-            rgba(19, 25, 53, 0.75) 40%, 
-            rgba(73, 98, 145, 0.6) 85%, 
-            rgba(133, 107, 179, 0.5) 100%),
-        radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.15) 0.5px, transparent 1px),
-        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.15) 0.5px, transparent 1px),
-        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.15) 0.5px, transparent 1px),
-        radial-gradient(circle at 20% 60%, rgba(255, 255, 255, 0.15) 0.5px, transparent 1px),
-        radial-gradient(circle at 60% 80%, rgba(255, 255, 255, 0.15) 0.5px, transparent 1px);
+  background-color: transparent;
+  color: @foreground;
 }
-
-/* Modules common style */
-#workspaces,
-#clock,
+#workspaces {
+  background-color: @background;
+  padding: 2px 2px 2px 2px;
+  border-radius: 5px;
+}
+#workspaces button.active {
+  background-color: @color1;
+  color: @foreground;
+  padding: 5px 15px;
+}
+#workspaces button.active:hover {
+  color: @background;
+  background: @color2;
+}
+#workspaces button.empty {
+  color: @foreground;
+}
+#workspaces button {
+  background-color: @background;
+  color: @foreground;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+  transition: background-color 0.6s ease, color 0.6s ease, padding-left 0.3s ease, padding-right 0.3s ease
+}
+#workspaces button:hover {
+  background: @color4;
+}
+#workspaces button.urgent {
+  background-color: @color4;
+  color: @background;
+}
 #battery,
 #pulseaudio,
+#backlight,
+#custom-pacman,
 #network,
+#bluetooth,
+#clock,
+#custom-weather,
+#custom-media,
+#window,
+#cpu,
+#memory,
+#disk,
+#tray,
 #custom-launcher,
-#custom-power {
-    background: rgba(44, 59, 95, 0.45);
-    color: #e0e8ff;
-    border-radius: 12px;
-    margin: 4px 3px;
-    padding: 2px 10px;
-    border: 1px solid rgba(114, 137, 218, 0.3);
+#custom-notification,
+#power-profiles-daemon {
+  color: @foreground;
+  background-color: @background;
+  padding: 0 30px 0 30px;
+  margin: 0 12px;
 }
-
-/* Workspace module with enhanced active workspace indicator */
-#workspaces button {
-    color: #a9b3d5;
-    border-radius: 10px;
-    margin: 0 2px;
-    padding: 0 8px;
-    font-size: 18px; /* Slightly larger for better visibility */
+#custom-volight,
+#custom-wifibt{
+  font-size: 16px;
+  color: @foreground;
+  background-color: @background;
+  padding: 0;
+  margin: 0;
 }
-
-#workspaces button.active {
-    color: #ffffff;
-    background: linear-gradient(to right, rgba(108, 131, 214, 0.8), rgba(154, 119, 207, 0.8));
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
-    box-shadow: 0 0 8px rgba(154, 119, 207, 0.6);
-    border: 1px solid rgba(154, 119, 207, 0.7);
-    animation: cosmic-pulse 2s infinite alternate;
+#custom-volight {
+  padding-left: 15px;
+  padding-right: 10px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
-
-@keyframes cosmic-pulse {
-    0% {
-        box-shadow: 0 0 3px rgba(154, 119, 207, 0.6);
-        text-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
-    }
-    50% {
-        box-shadow: 0 0 12px rgba(154, 119, 207, 0.8);
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    }
-    100% {
-        box-shadow: 0 0 3px rgba(154, 119, 207, 0.6);
-        text-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
-    }
+#custom-wifibt {
+  padding-right: 15px;
+  padding-left: 10px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
-
-#workspaces button.urgent {
-    background: linear-gradient(to right, rgba(220, 50, 47, 0.7), rgba(215, 153, 34, 0.7));
-    color: #ffffff;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    animation: urgent-pulse 1s infinite alternate;
+#pulseaudio,
+#backlight,
+#network,
+#bluetooth {
+  margin: 0 6px;
 }
-
-@keyframes urgent-pulse {
-    from {
-        box-shadow: 0 0 5px rgba(220, 50, 47, 0.7);
-    }
-    to {
-        box-shadow: 0 0 12px rgba(220, 50, 47, 0.9);
-    }
+#window.hidden {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
 }
-
-#workspaces button:hover {
-    background: rgba(73, 98, 145, 0.6);
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(114, 137, 218, 0.5);
-}
-
-/* Workspace label with current number indicator */
-#workspaces {
-    background: linear-gradient(to right, rgba(44, 59, 95, 0.45), rgba(63, 81, 125, 0.45));
-    padding-right: 12px;
-}
-
-/* Removed problematic :after pseudo-element */
-
-/* Pink horizon accent for clock */
-#clock {
-    background: linear-gradient(to right, rgba(73, 98, 145, 0.6), rgba(133, 107, 179, 0.6));
-    color: #ffffff;
-    border: 1px solid rgba(154, 119, 207, 0.5);
-    box-shadow: 0 0 5px rgba(154, 119, 207, 0.3);
-    text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
-}
-
-/* Battery styles with color gradients */
-#battery {
-    color: #dce4ff;
-}
-
-#battery.warning {
-    background: rgba(215, 153, 34, 0.7);
-    color: #fff;
-}
-
-#battery.critical {
-    background: rgba(220, 50, 47, 0.7);
-    animation: blink 1s ease-in-out infinite alternate;
-    color: #fff;
-}
-
-@keyframes blink {
-    from {
-        background: rgba(220, 50, 47, 0.7);
-    }
-    to {
-        background: rgba(220, 50, 47, 0.3);
-    }
-}
-
-/* Network module with starry hover effect */
-#network {
-    color: #dce4ff;
-}
-
-#network:hover {
-    background: rgba(73, 98, 145, 0.8);
-    background-image: radial-gradient(circle at 70% 40%, rgba(255, 255, 255, 0.2) 0.5px, transparent 1.5px),
-                     radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.2) 0.5px, transparent 1.5px);
-    background-size: 20px 20px;
-}
-
-/* Custom modules with pink horizon accent for launcher */
-#custom-launcher {
-    background: linear-gradient(to right, rgba(133, 107, 179, 0.6), rgba(73, 98, 145, 0.6));
-    color: #ffffff;
-    border: 1px solid rgba(154, 119, 207, 0.5);
-    box-shadow: 0 0 5px rgba(154, 119, 207, 0.3);
-    margin-left: 6px;
-}
-
-#custom-power {
-    background: rgba(73, 98, 145, 0.6);
-    color: #e0e8ff;
-    margin-right: 6px;
-}
-
-#custom-power:hover {
-    background: rgba(133, 107, 179, 0.8);
-    color: #ffffff;
-}
-
-/* Audio module */
-#pulseaudio {
-    color: #dce4ff;
-}
-
-/* Add a subtle animation to the bar on hover */
-window#waybar:hover {
-    border-bottom: 3px solid rgba(154, 119, 207, 0.7);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
-}
-
-/* Tooltip styling */
-tooltip {
-    background: rgba(19, 25, 53, 0.9);
-    border: 1px solid rgba(114, 137, 218, 0.5);
-    border-radius: 10px;
-}
-
-tooltip label {
-    color: #e0e8ff;
-}
-
-
-#custom-hypr-workspace {
-    background: rgba(44, 59, 95, 0.45);
-    color: #e0e8ff;
-    border-radius: 12px;
-    margin: 4px 3px;
-    padding: 2px 10px;
-    border: 1px solid rgba(114, 137, 218, 0.3);
-    font-size: 18px;
+window#waybar.empty #window {
+    background-color: transparent;
 }
