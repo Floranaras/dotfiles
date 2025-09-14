@@ -301,20 +301,92 @@ npm --version
 
 ### Markdown Preview Issues
 
-**Glow not working:**
-```bash
-# Check if glow is installed
-glow --version
+**Peek Plugin "Module not found" Error:**
 
+This error occurs when the Peek plugin hasn't been built properly. Peek is a Deno-based markdown preview plugin that requires a build step.
+
+**Error symptoms:**
+- `error: Module not found "file:///home/user/.local/share/nvim/lazy/peek.nvim/public/main.bundle.js"`
+- `zsh:1: command not found: deno`
+
+**Complete fix:**
+
+1. **Install Deno (if not installed):**
+   ```bash
+   curl -fsSL https://deno.land/x/install/install.sh | sh
+   ```
+
+2. **Add Deno to PATH:**
+   ```bash
+   export PATH="$HOME/.deno/bin:$PATH"
+   # Add to your ~/.zshrc to make it permanent
+   echo 'export PATH="$HOME/.deno/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+3. **Navigate to the Peek plugin directory:**
+   ```bash
+   cd ~/.local/share/nvim/lazy/peek.nvim
+   ```
+
+4. **Build the plugin:**
+   ```bash
+   deno task build:fast
+   # or alternatively:
+   deno task build
+   ```
+
+5. **Verify the build was successful:**
+   ```bash
+   ls -la public/
+   # You should see main.bundle.js (around 3MB in size)
+   ```
+
+6. **Restart Neovim and test:**
+   ```bash
+   nvim test.md
+   # Then in Neovim:
+   :PeekOpen
+   ```
+
+**Configure Peek plugin in your Neovim config:**
+```lua
+{
+  "toppair/peek.nvim",
+  event = { "VeryLazy" },
+  build = "deno task --quiet build:fast",
+  config = function()
+    require("peek").setup({
+      auto_load = true,
+      close_on_bufleave = true,
+      syntax = true,
+      theme = 'dark',
+      update_on_change = true,
+      app = 'webview',
+      filetype = { 'markdown' },
+    })
+    
+    vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+    vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+    vim.api.nvim_create_user_command("PeekToggle", require("peek").toggle, {})
+  end,
+}
+```
+
+**Alternative: Glow for Markdown Preview:**
+
+If you prefer a simpler terminal-based markdown preview:
+
+```bash
 # Install glow
-# Arch: sudo pacman -S glow
-# Ubuntu: Use GitHub releases
-# macOS: brew install glow
+sudo pacman -S glow  # Arch
+sudo apt install glow  # Ubuntu (may need to add repository)
+brew install glow     # macOS
 
 # Test glow directly
 glow README.md
 
-# Check Neovim glow command
+# Use in Neovim
 nvim -c ":Glow"
 ```
 
@@ -886,12 +958,13 @@ Remember: The more specific and detailed your problem description, the easier it
 | Aliases not working | `source ~/.zshrc` |
 | Icons not showing | Install Nerd Fonts, run `fc-cache -fv` |
 | Neovim plugins broken | `:Lazy sync` in Neovim |
+| **Peek plugin "Module not found"** | **Install Deno, build plugin: `deno task build:fast`** |
 | Waybar not appearing | `killall waybar && waybar &` |
 | Hyprland not responding | `hyprctl reload` |
 | LSP not working | `:LspRestart` in Neovim |
 | Tmux config not loaded | `tmux source-file ~/.tmux.conf` |
 | Glow/markdown preview broken | Install glow: `sudo pacman -S glow` |
 | Terminal font issues | Install JetBrains Mono Nerd Font |
- Stow conflicts | `stow -D */ && stow */` |
+| Stow conflicts | `stow -D */ && stow */` |
 
 For persistent issues not covered here, don't hesitate to open an issue in the repository or seek help from the community resources listed above!

@@ -31,7 +31,7 @@ This Neovim configuration provides a modern, powerful development environment wi
 - **Beautiful formatting** for headers, lists, and code blocks
 - **Integrated workflow** - preview directly in Neovim
 
-### 🔍 Powerful Search & Navigation
+### Powerful Search & Navigation
 - **Telescope fuzzy finder** for files and content
 - **Harpoon** for quick file switching
 - **Live grep** search across entire projects
