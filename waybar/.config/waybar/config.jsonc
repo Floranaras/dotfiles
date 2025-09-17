@@ -6,7 +6,7 @@
   "margin-right": 5,
   "modules-left": ["clock", "hyprland/workspaces"],
   "modules-center": [],
-  "modules-right": ["custom/weather", "battery", "group/volight","group/wifibt","custom/notification"],
+  "modules-right": ["battery", "group/volight","group/wifibt","custom/notification"],
 
   "group/volight":{
       "orientation": "inherit",
@@ -182,14 +182,6 @@
     "device": "intel_backlight",
     "format": "{icon}   {percent}%",
     "format-icons": ["󰃞", "󰃟", "󰃠"]
-  },
-
-  "custom/weather": {
-    "exec": "${HOME}/.config/waybar/scripts/get_weather.sh Morshi+MH",
-    "return-type": "json",
-    "format": "{}",
-    "tooltip": true,
-    "interval": 3600
   },
 
   "hyprland/window": {
