@@ -6,7 +6,7 @@ theme = dark:Rose Pine,light:Rose Pine Dawn
 foreground = #ffffff
 background = #121212
 background-opacity = 0.85
-background-blur = 6
+background-blur = 0
 # window settings
 window-padding-x = 10
 window-padding-y = 10
