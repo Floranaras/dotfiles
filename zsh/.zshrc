@@ -52,4 +52,5 @@ ginit() {
     echo "Creating Java project with package: com.$1"
     gradle init --type java-application --package "$1"
 }
-#. "/home/callo/.deno/env"export PATH="$HOME/.deno/bin:$PATH"
+
+alias vi="nvim"
