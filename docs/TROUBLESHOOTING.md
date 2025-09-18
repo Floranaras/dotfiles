@@ -301,9 +301,74 @@ npm --version
 
 ### Markdown Preview Issues
 
-**Peek Plugin "Module not found" Error:**
+**Peek Plugin Issues:**
 
-This error occurs when the Peek plugin hasn't been built properly. Peek is a Deno-based markdown preview plugin that requires a build step.
+**Preview window not opening (keybinding works but nothing happens):**
+
+This is usually caused by missing webview dependencies. Peek requires a webview application to display the markdown preview.
+
+```bash
+# Install webkit2gtk (most common solution)
+sudo pacman -S webkit2gtk  # Arch Linux
+sudo apt install webkit2gtk-4.0-dev  # Ubuntu/Debian
+brew install webkit2gtk  # macOS
+
+# Alternative: Install a browser if webview doesn't work
+sudo pacman -S firefox chromium brave-bin  # Choose one
+```
+
+**Configure app preference in Peek setup:**
+```lua
+require("peek").setup({
+    app = 'webview',    -- Default, uses webkit2gtk
+    -- app = 'browser',    -- Uses system default browser
+    -- app = 'firefox',    -- Use specific browser
+    -- app = 'brave',      -- For Brave browser users
+    -- app = 'chromium',   -- For Chromium users
+})
+```
+
+**Keybinding `<Space>md` not working:**
+
+1. **Leader key not set or set too late:**
+   ```lua
+   -- Add this to the TOP of ~/.config/nvim/lua/callo/init.lua
+   vim.g.mapleader = " "
+   ```
+
+2. **Plugin lazy loading preventing keymap creation:**
+   ```lua
+   -- Change from event = { "VeryLazy" } to:
+   lazy = false,  -- Force immediate loading
+   ```
+
+3. **Test if plugin loads:**
+   ```vim
+   :lua require("peek").open()
+   ```
+
+**Complete working Peek configuration:**
+```lua
+{
+  "toppair/peek.nvim",
+  lazy = false,
+  build = "deno task --quiet build:fast",
+  config = function()
+    require("peek").setup({
+      auto_load = true,
+      close_on_bdelete = true,
+      syntax = true,
+      theme = 'dark',
+      update_on_change = true,
+      app = 'webview',
+      filetype = { 'markdown' },
+    })
+    
+    vim.keymap.set("n", "<leader>md", function() require("peek").open() end, { desc = "Peek (Markdown Preview)" })
+    vim.keymap.set("n", "<leader>mc", function() require("peek").close() end, { desc = "Peek Close" })
+  end,
+}
+```
 
 **Error symptoms:**
 - `error: Module not found "file:///home/user/.local/share/nvim/lazy/peek.nvim/public/main.bundle.js"`
@@ -349,26 +414,34 @@ This error occurs when the Peek plugin hasn't been built properly. Peek is a Den
    :PeekOpen
    ```
 
-**Configure Peek plugin in your Neovim config:**
+**7. Install webkit2gtk for webview support:**
+   ```bash
+   # Required for Peek to display preview window
+   sudo pacman -S webkit2gtk  # Arch Linux
+   sudo apt install webkit2gtk-4.0-dev  # Ubuntu/Debian
+   brew install webkit2gtk  # macOS
+   ```
+
+**8. Configure Peek plugin in your Neovim config:**
 ```lua
 {
   "toppair/peek.nvim",
-  event = { "VeryLazy" },
+  lazy = false,  -- Load immediately to avoid keymap issues
   build = "deno task --quiet build:fast",
   config = function()
     require("peek").setup({
       auto_load = true,
-      close_on_bufleave = true,
+      close_on_bdelete = true,
       syntax = true,
       theme = 'dark',
       update_on_change = true,
-      app = 'webview',
+      app = 'webview',  -- or 'browser', 'firefox', 'chromium', 'brave'
       filetype = { 'markdown' },
     })
     
-    vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-    vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-    vim.api.nvim_create_user_command("PeekToggle", require("peek").toggle, {})
+    -- Create keymaps manually for reliable loading
+    vim.keymap.set("n", "<leader>md", function() require("peek").open() end, { desc = "Peek (Markdown Preview)" })
+    vim.keymap.set("n", "<leader>mc", function() require("peek").close() end, { desc = "Peek Close" })
   end,
 }
 ```
@@ -958,7 +1031,8 @@ Remember: The more specific and detailed your problem description, the easier it
 | Aliases not working | `source ~/.zshrc` |
 | Icons not showing | Install Nerd Fonts, run `fc-cache -fv` |
 | Neovim plugins broken | `:Lazy sync` in Neovim |
-| **Peek plugin "Module not found"** | **Install Deno, build plugin: `deno task build:fast`** |
+| **Peek plugin "Module not found"** | **Install Deno: `deno task build:fast`, then install webkit2gtk: `sudo pacman -S webkit2gtk`** |
+| **Peek preview not opening** | **Install webkit2gtk: `sudo pacman -S webkit2gtk`** |
 | Waybar not appearing | `killall waybar && waybar &` |
 | Hyprland not responding | `hyprctl reload` |
 | LSP not working | `:LspRestart` in Neovim |
@@ -966,5 +1040,3 @@ Remember: The more specific and detailed your problem description, the easier it
 | Glow/markdown preview broken | Install glow: `sudo pacman -S glow` |
 | Terminal font issues | Install JetBrains Mono Nerd Font |
 | Stow conflicts | `stow -D */ && stow */` |
-
-For persistent issues not covered here, don't hesitate to open an issue in the repository or seek help from the community resources listed above!

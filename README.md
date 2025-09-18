@@ -1,4 +1,4 @@
-My Dotfiles - Hyprland Anime-Inspired Rice
+## My Dotfiles - Hyprland Anime-Inspired Rice
 
 > A beautiful, minimal, and expressive Hyprland setup themed around a serene anime night sky
 
