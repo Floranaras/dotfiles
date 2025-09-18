@@ -41,7 +41,7 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
    cd ~/.dotfiles
    ```
 
-2. **Install prerequisites** - See [INSTALLATION.md](INSTALLATION.md) for detailed OS-specific instructions
+2. **Install prerequisites** - See [INSTALLATION.md](docs/INSTALLATION.md) for detailed OS-specific instructions
 
 3. **Use stow to create symbolic links:**
    ```bash
@@ -64,10 +64,10 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 Deep blues, purples, and gentle pinks create a serene workspace inspired by starry night skies.
 
 ###  **Modern Shell Experience** 
-Zsh with eza file listing, tree views, and productivity aliases. See [SHELL.md](SHELL.md) for all aliases.
+Zsh with eza file listing, tree views, and productivity aliases. See [SHELL.md](docs/SHELL.md) for all aliases.
 
 ###  **Powerful Neovim Setup**
-Complete LSP configuration, markdown preview with Glow, and cross-platform compatibility. Full details in [NEOVIM.md](NEOVIM.md).
+Complete LSP configuration, markdown preview with Glow, and cross-platform compatibility. Full details in [NEOVIM.md](docs/NEOVIM.md).
 
 ###  **Hyprland Integration**
 Dynamic tiling with smooth animations and custom keybinds optimized for productivity.
@@ -77,11 +77,11 @@ Configurations work across Linux, macOS, and Windows (WSL), with automatic depen
 
 ## Documentation
 
-- **[INSTALLATION.md](INSTALLATION.md)** - Complete installation guide for all operating systems
-- **[CONFIGURATION.md](CONFIGURATION.md)** - Detailed configuration explanations
-- **[SHELL.md](SHELL.md)** - Shell aliases, functions, and productivity features
-- **[NEOVIM.md](NEOVIM.md)** - Neovim setup, keybindings, and features
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Solutions for common issues
+- **[INSTALLATION.md](docs/INSTALLATION.md)** - Complete installation guide for all operating systems
+- **[CONFIGURATION.md](docs/CONFIGURATION.md)** - Detailed configuration explanations
+- **[SHELL.md](docs/SHELL.md)** - Shell aliases, functions, and productivity features
+- **[NEOVIM.md](docs/NEOVIM.md)** - Neovim setup, keybindings, and features
+- **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Solutions for common issues
 
 ## Configuration Structure
 
