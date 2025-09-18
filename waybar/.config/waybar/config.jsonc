@@ -1,212 +1,177 @@
 {
-  // ═══════════════════════════════════════════════════════════════════════════════
-  //                              BAR CONFIGURATION
-  // ═══════════════════════════════════════════════════════════════════════════════
-  
-  "layer": "top",
-  "position": "top",
-  "height": 60,
-  
-  // Margins
-  "margin-top": 5,
-  "margin-left": 5,
-  "margin-right": 5,
-  
-  // Module Layout
-  "modules-left": ["clock", "hyprland/workspaces"],
-  "modules-center": [],
-  "modules-right": ["battery", "group/volight", "group/wifibt", "custom/notification"],
+    "layer": "top",
+    "position": "top",
+    "margin-top": 5,
+    "margin-left": 5,
+    "margin-right": 5,
+    "modules-left": ["clock", "hyprland/workspaces"],
+    "modules-center": [],
+    "modules-right": ["battery", "group/volight","group/wifibt","custom/notification"],
+    "group/volight":{
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-power",
+            "transition-left-to-right": true,
+            "click-to-reveal": true
+        },
+        "modules": [
+            "custom/volight",
+            "pulseaudio",
+            "backlight"
+        ]
+    }, 
+    "group/wifibt":{
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 500,
+            "children-class": "not-power",
+            "transition-left-to-right": false,
+            "click-to-reveal": true
+        },
+        "modules": [
+            "custom/wifibt",
+            "bluetooth",
+            "network"
+        ]
+    }, 
+    "height": 60,
+    "custom/wifibt":{
+        "format" : " 󰤨"
+    },
+    "custom/volight":{
+        "format" : "󰕾 󰃠"
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "󰂄  {capacity}%",
+        "format-plugged": "󰂄  {capacity}%",
+        "format-alt": "{icon}  {time}",
+        "format-full": "󰁹  {capacity}%",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "Battery: {capacity}% | {time}",
+        "on-click": "gnome-power-statistics"
+    },
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "󰂚 <span foreground='red'><sup></sup></span>",
+            "none": "󰂚",
+            "dnd-notification": "󰂛 <span foreground='red'><sup></sup></span>",
+            "dnd-none": "󰂛",
+            "inhibited-notification": "󰂚 <span foreground='red'><sup></sup></span>",
+            "inhibited-none": "󰂚",
+            "dnd-inhibited-notification": "󰂛 <span foreground='red'><sup></sup></span>",
+            "dnd-inhibited-none": "󰂛"
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+    "custom/launcher": {
+        "format": "",
+        "on-click": "bash /home/$USER/.config/waybar/scripts/app_launcher.sh",
+        "tooltip-format": "Launch your favorite apps"
+    },
+    "custom/pacman": {
+        "format": "  {}",
+        "interval": "once",
+        "exec": "checkupdates | wc -l",
+        "on-click": "update-system",
+        "signal": 8,
+        "tooltip-format": "{} updates available"
+    },
+    "custom/media": {
+        "format": "{}",
+        "escape": true,
+        "return-type": "json",
+        "max-length": 40,
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl stop",
+        "smooth-scrolling-threshold": 1,
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous",
+        "exec": "$HOME/.config/waybar/scripts/mediaplayer.py 2> /dev/null"
+    },
+    "clock": {
+        "format": "󰥔  {:%I:%M %p}",
+        "tooltip-format": "{:%A | %d-%m-%Y}"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-bluetooth": "󰂱{volume}%",
+        "format-muted": "󰖁",
+        "scroll-step": 1,
+        "on-click": "pavucontrol",
+        "ignored-sinks": ["Easy Effects Sink"],
+        "format-icons": {
+            "headphone": "󰋎",
+            "hands-free": "󰋎",
+            "headset": "󰋎",
+            "phone": "󰋎",
+            "portable": "󰋎",
+            "car": "󰋎",
+            "default": ["󰖀", "󰕾", "󰕿", "󰖀"]
+        },
+        "tooltip-format": "Volume: {volume}%"
+    },
 
-  // ═══════════════════════════════════════════════════════════════════════════════
-  //                                MODULE GROUPS
-  // ═══════════════════════════════════════════════════════════════════════════════
-  
-  "group/volight": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 500,
-      "children-class": "not-power",
-      "transition-left-to-right": true,
-      "click-to-reveal": true
+    "network": {
+        "interface": "wlo1",
+        "format": "{ifname}",
+        "format-wifi": "{icon}  {essid}",
+        "format-ethernet": "󰈀  {ipaddr}/{cidr}",
+        "format-disconnected": "󰤭 Disconnected",
+        "max-length": 50,
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "tooltip-format": "Connected to {essid}",
+        "on-click" : "kitty -e ~/.config/waybar/scripts/nmtui.sh"
     },
-    "modules": ["custom/volight", "pulseaudio", "backlight"]
-  },
-  
-  "group/wifibt": {
-    "orientation": "inherit",
-    "drawer": {
-      "transition-duration": 500,
-      "children-class": "not-power",
-      "transition-left-to-right": false,
-      "click-to-reveal": true
+    "bluetooth": {
+        "format": "",
+        "format-on": "󰂲  Disconnected",
+        "format-disabled": "Disabled",
+        "format-connected": " {device_alias}",
+        "format-connected-battery": "󰂱 {device_alias}",
+        "on-click": "blueberry"
     },
-    "modules": ["custom/wifibt", "bluetooth", "network"]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════════
-  //                               CUSTOM MODULES
-  // ═══════════════════════════════════════════════════════════════════════════════
-  
-  "custom/wifibt": {
-    "format": " 󰤨"
-  },
-  
-  "custom/volight": {
-    "format": "󰕾 󰃠"
-  },
-  
-  "custom/notification": {
-    "tooltip": false,
-    "format": "{icon}",
-    "format-icons": {
-      "notification": "<span foreground='red'><sup></sup></span>",
-      "none": "",
-      "dnd-notification": "<span foreground='red'><sup></sup></span>",
-      "dnd-none": "",
-      "inhibited-notification": "<span foreground='red'><sup></sup></span>",
-      "inhibited-none": "",
-      "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
-      "dnd-inhibited-none": ""
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "6": "6",
+            "7": "7",
+            "8": "8",
+            "9": "9",
+            "10": "10"
+        },
+        "persistent-workspaces": {
+            "*": 5
+        },
+        "sort-by-number": true
     },
-    "return-type": "json",
-    "exec-if": "which swaync-client",
-    "exec": "swaync-client -swb",
-    "on-click": "swaync-client -t -sw",
-    "on-click-right": "swaync-client -d -sw",
-    "escape": true
-  },
-  
-  "custom/launcher": {
-    "format": "",
-    "on-click": "bash /home/$USER/.config/waybar/scripts/app_launcher.sh",
-    "tooltip-format": "Launch your favorite apps"
-  },
-  
-  "custom/pacman": {
-    "format": "  {}",
-    "interval": "once",
-    "exec": "checkupdates | wc -l",
-    "on-click": "update-system",
-    "signal": 8,
-    "tooltip-format": "{} updates available"
-  },
-  
-  "custom/media": {
-    "format": "{}",
-    "escape": true,
-    "return-type": "json",
-    "max-length": 40,
-    "on-click": "playerctl play-pause",
-    "on-click-right": "playerctl stop",
-    "smooth-scrolling-threshold": 1,
-    "on-scroll-up": "playerctl next",
-    "on-scroll-down": "playerctl previous",
-    "exec": "$HOME/.config/waybar/scripts/mediaplayer.py 2> /dev/null"
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════════
-  //                               SYSTEM MODULES
-  // ═══════════════════════════════════════════════════════════════════════════════
-  
-  "clock": {
-    "format": "󰥔  {:%I:%M %p}",
-    "tooltip-format": "{:%A | %d-%m-%Y}"
-  },
-  
-  "battery": {
-    "states": {
-      "warning": 30,
-      "critical": 15
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon}  {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"]
     },
-    "format": "{icon}  {capacity}%",
-    "format-charging": "󰂄  {capacity}%",
-    "format-plugged": "󰂄  {capacity}%",
-    "format-alt": "{icon}  {time}",
-    "format-full": "󰁹  {capacity}%",
-    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-    "tooltip-format": "Battery: {capacity}% | {time}",
-    "on-click": "gnome-power-statistics"
-  },
-  
-  "pulseaudio": {
-    "format": "{icon}  {volume}%",
-    "format-bluetooth": "󰂱 {volume}%",
-    "format-muted": "󰖁",
-    "scroll-step": 1,
-    "on-click": "pavucontrol",
-    "ignored-sinks": ["Easy Effects Sink"],
-    "format-icons": {
-      "headphone": "",
-      "hands-free": "",
-      "headset": "󰋎",
-      "phone": "",
-      "portable": "",
-      "car": "",
-      "default": ["󰖀", "󰕾"]
-    },
-    "tooltip-format": "Volume: {volume}%"
-  },
-  
-  "backlight": {
-    "device": "intel_backlight",
-    "format": "{icon}   {percent}%",
-    "format-icons": ["󰃞", "󰃟", "󰃠"]
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════════
-  //                            NETWORK & BLUETOOTH
-  // ═══════════════════════════════════════════════════════════════════════════════
-  
-  "network": {
-    "interface": "wlo1",
-    "format": "{ifname}",
-    "format-wifi": "{icon}  {essid}",
-    "format-ethernet": "󰈀  {ipaddr}/{cidr}",
-    "format-disconnected": "󰤭 Disconnected",
-    "max-length": 50,
-    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
-    "tooltip-format": "Connected to {essid}",
-    "on-click": "kitty -e ~/.config/waybar/scripts/nmtui.sh"
-  },
-  
-  "bluetooth": {
-    "format": "",
-    "format-on": "󰂲  Disconnected",
-    "format-disabled": "Disabled",
-    "format-connected": " {device_alias}",
-    "format-connected-battery": "󰂱 {device_alias}",
-    "on-click": "blueberry"
-  },
-
-  // ═══════════════════════════════════════════════════════════════════════════════
-  //                              HYPRLAND MODULES
-  // ═══════════════════════════════════════════════════════════════════════════════
-  
-  "hyprland/workspaces": {
-    "format": "{icon}",
-    "on-click": "activate",
-    "format-icons": {
-      "1": "1",
-      "2": "2",
-      "3": "3",
-      "4": "4",
-      "5": "5",
-      "6": "6",
-      "7": "7",
-      "8": "8",
-      "9": "9",
-      "10": "10"
-    },
-    "persistent-workspaces": {
-      "*": 5
-    },
-    "sort-by-number": true
-  },
-  
-  "hyprland/window": {
-    "format": "{class}",
-    "separate-outputs": true,
-    "icon": true,
-    "icon-size": 18
-  }
+    "hyprland/window": {
+        "format": "{class}",
+        "separate-outputs": true,
+        "icon": true,
+        "icon-size": 18
+    }
 }
