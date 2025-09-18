@@ -2,7 +2,7 @@
 font-family = jetbrains mono
 font-size = 22
 # colors
-theme = rose-pine 
+theme = Rose Pine 
 foreground = #ffffff
 background = #121212
 background-opacity = 0.85
