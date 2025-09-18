@@ -1,20 +1,30 @@
 return {
-    "toppair/peek.nvim",
-    event = { "VeryLazy" },
-    build = "deno task --quiet build:fast",
-    keys = {
-        { "<leader>md", function() require("peek").open() end, desc = "Peek (Markdown Preview)" },
-        { "<leader>mc", function() require("peek").close() end, desc = "Peek Close" },
+    {
+        "toppair/peek.nvim",
+        event = { "VeryLazy" },
+        build = "deno task --quiet build:fast",
+
+        keys = {
+            { "<leader>md", function() require("peek").open() end, desc = "Peek (Markdown Preview)" },
+            { "<leader>mc", function() require("peek").close() end, desc = "Peek Close" },
+        },
+
+        config = function()
+            require("peek").setup()
+            vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+            vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+
+            require('peek').setup({
+                auto_load = true,
+                close_on_bdelete = true,
+                syntax = true,
+                theme = 'dark',
+                update_on_change = true,
+                app = 'webview',
+                filetype = { 'markdown' },
+                throttle_at = 200000,
+                throttle_time = 'auto',
+            })
+        end,
     },
-    config = function()
-        require("peek").setup({
-            auto_load = true,         -- automatically load preview when entering markdown buffer
-            close_on_bufleave = true, -- close preview window on buffer leave
-            syntax = true,            -- enable syntax highlighting
-            theme = 'dark',           -- 'dark' or 'light' (GitHub style)
-            update_on_change = true,  -- update preview on file change
-            app = 'webview',          -- opens in a webview window
-            filetype = { 'markdown' }, -- only for markdown files
-        })
-    end,
 }
