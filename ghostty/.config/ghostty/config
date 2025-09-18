@@ -6,7 +6,7 @@ theme = rose-pine
 foreground = #ffffff
 background = #121212
 background-opacity = 0.85
-background-blur = 0
+background-blur = 6
 # window settings
 window-padding-x = 10
 window-padding-y = 10
