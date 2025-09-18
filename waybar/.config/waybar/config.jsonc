@@ -1,68 +1,60 @@
 {
+  // ═══════════════════════════════════════════════════════════════════════════════
+  //                              BAR CONFIGURATION
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
   "layer": "top",
   "position": "top",
+  "height": 60,
+  
+  // Margins
   "margin-top": 5,
   "margin-left": 5,
   "margin-right": 5,
+  
+  // Module Layout
   "modules-left": ["clock", "hyprland/workspaces"],
   "modules-center": [],
-  "modules-right": ["battery", "group/volight","group/wifibt","custom/notification"],
+  "modules-right": ["battery", "group/volight", "group/wifibt", "custom/notification"],
 
-  "group/volight":{
-      "orientation": "inherit",
-      "drawer": {
-        "transition-duration": 500,
-        "children-class": "not-power",
-        "transition-left-to-right": true,
-        "click-to-reveal": true
-      },
-      "modules": [
-        "custom/volight",
-        "pulseaudio",
-        "backlight"
-      ]
-    }, 
-
-  "group/wifibt":{
-      "orientation": "inherit",
-      "drawer": {
-        "transition-duration": 500,
-        "children-class": "not-power",
-        "transition-left-to-right": false,
-        "click-to-reveal": true
-      },
-      "modules": [
-        "custom/wifibt",
-        "bluetooth",
-        "network"
-      ]
-    }, 
-
-  "height": 60,
-
-  "custom/wifibt":{
-    "format" : " 󰤨"
-  },
-
-  "custom/volight":{
-    "format" : "󰕾 󰃠"
-  },
-
-  "battery": {
-    "states": {
-      "warning": 30,
-      "critical": 15
+  // ═══════════════════════════════════════════════════════════════════════════════
+  //                                MODULE GROUPS
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
+  "group/volight": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "not-power",
+      "transition-left-to-right": true,
+      "click-to-reveal": true
     },
-    "format": "{icon}  {capacity}%",
-    "format-charging": "󰂄  {capacity}%",
-    "format-plugged": "󰂄  {capacity}%",
-    "format-alt": "{icon}  {time}",
-    "format-full": "󰁹  {capacity}%",
-    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-    "tooltip-format": "Battery: {capacity}% | {time}",
-    "on-click": "gnome-power-statistics"
+    "modules": ["custom/volight", "pulseaudio", "backlight"]
+  },
+  
+  "group/wifibt": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "not-power",
+      "transition-left-to-right": false,
+      "click-to-reveal": true
+    },
+    "modules": ["custom/wifibt", "bluetooth", "network"]
   },
 
+  // ═══════════════════════════════════════════════════════════════════════════════
+  //                               CUSTOM MODULES
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
+  "custom/wifibt": {
+    "format": " 󰤨"
+  },
+  
+  "custom/volight": {
+    "format": "󰕾 󰃠"
+  },
+  
   "custom/notification": {
     "tooltip": false,
     "format": "{icon}",
@@ -83,13 +75,13 @@
     "on-click-right": "swaync-client -d -sw",
     "escape": true
   },
-
+  
   "custom/launcher": {
     "format": "",
     "on-click": "bash /home/$USER/.config/waybar/scripts/app_launcher.sh",
     "tooltip-format": "Launch your favorite apps"
   },
-
+  
   "custom/pacman": {
     "format": "  {}",
     "interval": "once",
@@ -98,7 +90,7 @@
     "signal": 8,
     "tooltip-format": "{} updates available"
   },
-
+  
   "custom/media": {
     "format": "{}",
     "escape": true,
@@ -112,11 +104,30 @@
     "exec": "$HOME/.config/waybar/scripts/mediaplayer.py 2> /dev/null"
   },
 
+  // ═══════════════════════════════════════════════════════════════════════════════
+  //                               SYSTEM MODULES
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
   "clock": {
     "format": "󰥔  {:%I:%M %p}",
     "tooltip-format": "{:%A | %d-%m-%Y}"
   },
-
+  
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-plugged": "󰂄  {capacity}%",
+    "format-alt": "{icon}  {time}",
+    "format-full": "󰁹  {capacity}%",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "tooltip-format": "Battery: {capacity}% | {time}",
+    "on-click": "gnome-power-statistics"
+  },
+  
   "pulseaudio": {
     "format": "{icon}  {volume}%",
     "format-bluetooth": "󰂱 {volume}%",
@@ -135,7 +146,17 @@
     },
     "tooltip-format": "Volume: {volume}%"
   },
+  
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon}   {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"]
+  },
 
+  // ═══════════════════════════════════════════════════════════════════════════════
+  //                            NETWORK & BLUETOOTH
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
   "network": {
     "interface": "wlo1",
     "format": "{ifname}",
@@ -145,18 +166,22 @@
     "max-length": 50,
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
     "tooltip-format": "Connected to {essid}",
-    "on-click" : "kitty -e ~/.config/waybar/scripts/nmtui.sh"
+    "on-click": "kitty -e ~/.config/waybar/scripts/nmtui.sh"
   },
-
+  
   "bluetooth": {
     "format": "",
     "format-on": "󰂲  Disconnected",
     "format-disabled": "Disabled",
-	  "format-connected": " {device_alias}",
-	  "format-connected-battery": "󰂱 {device_alias}",
+    "format-connected": " {device_alias}",
+    "format-connected-battery": "󰂱 {device_alias}",
     "on-click": "blueberry"
   },
 
+  // ═══════════════════════════════════════════════════════════════════════════════
+  //                              HYPRLAND MODULES
+  // ═══════════════════════════════════════════════════════════════════════════════
+  
   "hyprland/workspaces": {
     "format": "{icon}",
     "on-click": "activate",
@@ -177,13 +202,7 @@
     },
     "sort-by-number": true
   },
-
-  "backlight": {
-    "device": "intel_backlight",
-    "format": "{icon}   {percent}%",
-    "format-icons": ["󰃞", "󰃟", "󰃠"]
-  },
-
+  
   "hyprland/window": {
     "format": "{class}",
     "separate-outputs": true,
