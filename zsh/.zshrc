@@ -31,6 +31,8 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # eza 
 alias l="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=2"
+alias l1="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=3"
+alias l2="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=4"
 alias ls="eza --icons"
 alias ll="eza -lg --icons"
 alias la="eza -lag --icons"
