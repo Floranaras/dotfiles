@@ -56,3 +56,4 @@ ginit() {
 }
 
 alias vi="nvim"
+alias report="open build/reports/tests/test/index.html"
