@@ -6,7 +6,6 @@ return {
             "williamboman/mason-lspconfig.nvim",
         },
         config = function()
-            local lspconfig = require("lspconfig")
             local capabilities = vim.lsp.protocol.make_client_capabilities()
 
             require("mason").setup()
@@ -14,14 +13,19 @@ return {
                 ensure_installed = { "clangd", "lua_ls" },
             })
 
-            lspconfig.clangd.setup {
-                capabilities = capabilities,
+            -- Use new vim.lsp.config API (Neovim 0.11+)
+            vim.lsp.config.clangd = {
                 cmd = { "clangd" },
+                filetypes = { "c", "cpp", "objc", "objcpp" },
+                root_markers = { ".git", "compile_commands.json" },
+                capabilities = capabilities,
             }
 
-            lspconfig.lua_ls.setup {
-                capabilities = capabilities,
+            vim.lsp.config.lua_ls = {
                 cmd = { "lua-language-server" },
+                filetypes = { "lua" },
+                root_markers = { ".git" },
+                capabilities = capabilities,
                 settings = {
                     Lua = {
                         diagnostics = {
@@ -31,6 +35,11 @@ return {
                 },
             }
 
+            -- Enable LSP servers
+            vim.lsp.enable("clangd")
+            vim.lsp.enable("lua_ls")
+
+            -- LSP Keybindings
             vim.api.nvim_create_autocmd('LspAttach', {
                 group = vim.api.nvim_create_augroup('user_lsp_attach', { clear = true }),
                 callback = function(event)
@@ -77,7 +86,7 @@ return {
                     ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                     ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
                     ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-                    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Added: Enter to auto-complete
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
                     ['<C-Space>'] = cmp.mapping.complete(),
                 }),
                 sources = cmp.config.sources({
@@ -88,8 +97,4 @@ return {
             })
         end,
     },
-
-    -- Mason Configuration (as a dependency of nvim-lspconfig)
-    -- { "williamboman/mason.nvim" },
-    -- { "williamboman/mason-lspconfig.nvim" },
 }

@@ -46,3 +46,23 @@ vim.keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights
 
 vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 vim.keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
+
+-- Window resizing
+vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase window width" })
+vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
+
+-- Window navigation
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Navigate to left window" })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Navigate to right window" })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Navigate to window below" })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Navigate to window above" })
+
+-- Equalize and maximize windows
+vim.keymap.set("n", "<leader>we", "<C-w>=", { desc = "Equalize window sizes" })
+vim.keymap.set("n", "<leader>wm", "<C-w>_<C-w>|", { desc = "Maximize current window" })
+
+-- Close windows
+vim.keymap.set("n", "<leader>wc", "<C-w>c", { desc = "Close current window" })
+vim.keymap.set("n", "<leader>wo", "<C-w>o", { desc = "Close all other windows" })
