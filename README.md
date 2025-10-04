@@ -20,7 +20,7 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 * **Status Bar**: Waybar with anime-themed styling
 * **Terminal**: Ghostty with custom configuration
 * **Shell**: Zsh with productivity aliases and eza file listing
-* **Editor**: Neovim with complete LSP setup and markdown preview
+* **Editor**: Neovim with complete LSP setup, markdown preview, web development tools, and database management
 * **Terminal Multiplexer**: Tmux with anime-themed styling
 
 ## What's Included
@@ -30,7 +30,7 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 - **Wofi**: Application launcher matching the theme
 - **Ghostty**: Modern terminal emulator configuration
 - **Tmux**: Terminal multiplexer with custom styling
-- **Neovim**: Complete editor setup with LSP, plugins, and markdown preview
+- **Neovim**: Complete editor setup with LSP, plugins, markdown preview, full web dev stack, and database management
 - **Zsh**: Shell configuration with productivity aliases and modern file listing
 
 ## Quick Start
@@ -60,19 +60,19 @@ This setup embraces an **anime-style aesthetic** with a character gazing at a **
 
 ## Key Features
 
-###  **Beautiful Anime Aesthetic**
+### **Beautiful Anime Aesthetic**
 Deep blues, purples, and gentle pinks create a serene workspace inspired by starry night skies.
 
-###  **Modern Shell Experience** 
+### **Modern Shell Experience** 
 Zsh with eza file listing, tree views, and productivity aliases. See [SHELL.md](docs/SHELL.md) for all aliases.
 
-###  **Powerful Neovim Setup**
-Complete LSP configuration, markdown preview with Glow, and cross-platform compatibility. Full details in [NEOVIM.md](docs/NEOVIM.md).
+### **Powerful Neovim Setup**
+Complete LSP configuration for multiple languages (C/C++, Lua, Java, HTML/CSS/JS), live web development server, Emmet support, database management with vim-dadbod, and markdown preview. Full details in [NEOVIM.md](docs/NEOVIM.md), [WEBDEV.md](docs/WEBDEV.md), and [NEOVIM_DB.md](docs/NEOVIM_DB.md).
 
-###  **Hyprland Integration**
+### **Hyprland Integration**
 Dynamic tiling with smooth animations and custom keybinds optimized for productivity.
 
-###  **Cross-Platform**
+### **Cross-Platform**
 Configurations work across Linux, macOS, and Windows (WSL), with automatic dependency handling.
 
 ## Documentation
@@ -81,6 +81,8 @@ Configurations work across Linux, macOS, and Windows (WSL), with automatic depen
 - **[CONFIGURATION.md](docs/CONFIGURATION.md)** - Detailed configuration explanations
 - **[SHELL.md](docs/SHELL.md)** - Shell aliases, functions, and productivity features
 - **[NEOVIM.md](docs/NEOVIM.md)** - Neovim setup, keybindings, and features
+- **[WEBDEV.md](docs/WEBDEV.md)** - Web development setup with Emmet, live server, and LSP
+- **[NEOVIM_DB.md](docs/NEOVIM_DB.md)** - Database management with vim-dadbod and DBUI
 - **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Solutions for common issues
 
 ## Configuration Structure
@@ -109,13 +111,16 @@ Configurations work across Linux, macOS, and Windows (WSL), with automatic depen
 - `<space>pf` - Find files
 - `<space>ps` - Live grep search
 - `<space>md` - Markdown preview
+- `<space>ls` - Start live server (web dev)
+- `<space>db` - Database UI
+- `Ctrl+y,` - Trigger Emmet expansion
 - `gd` - Go to definition
 
 See individual documentation files for complete references.
 
 ## Final Thoughts
 
-This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding, managing multiple terminal sessions, writing markdown documentation, or vibing with lofi, this desktop is your new starry refuge.
+This rice is meant to offer a calm, elegant workspace — inspired by anime visuals and cosmic beauty. Whether you're coding, building web apps with live reload, managing databases, handling multiple terminal sessions, writing markdown documentation, or vibing with lofi, this desktop is your new starry refuge.
 
 > "Even the darkest nights will end, and the stars will shine again." ✨
 

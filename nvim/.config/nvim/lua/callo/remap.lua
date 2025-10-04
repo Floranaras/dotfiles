@@ -66,3 +66,4 @@ vim.keymap.set("n", "<leader>wm", "<C-w>_<C-w>|", { desc = "Maximize current win
 -- Close windows
 vim.keymap.set("n", "<leader>wc", "<C-w>c", { desc = "Close current window" })
 vim.keymap.set("n", "<leader>wo", "<C-w>o", { desc = "Close all other windows" })
+
