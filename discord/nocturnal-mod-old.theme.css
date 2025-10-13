@@ -15,7 +15,6 @@
 @import url("https://xcruxiex.github.io/themes/themes-cores/nocturnal.css");
 
 @import url("https://xcruxiex.github.io/themes/core/badges.css");
-@import url("https://xcruxiex.github.io/themes/core/custom-font.css");
 @import url("https://discordstyles.github.io/RadialStatus/dist/RadialStatus.css"); /* Radial Status */
 @import url("https://discordstyles.github.io/HorizontalServerList/dist/HorizontalServerList.css"); /* Horizontal Server List */
 
@@ -50,7 +49,7 @@
     --rs-phone-visible: block;
     --rs-phone-color: var(--rs-online-color);
 
-    --customfont: "JetBrains Mono Medium", monospace;
+    --customfont: "JetBrains Mono", "JetBrains Mono NL", monospace;
     --customfont-weight: 500;
 }
 
@@ -58,6 +57,11 @@
     --HSL-server-icon-size: 20px;
     --HSL-server-spacing: 20px;
     --HSL-server-direction: column;
+}
+
+/* CUSTOM FONT APPLICATION - FIXED */
+* {
+    font-family: var(--customfont) !important;
 }
 
 /* fix */
