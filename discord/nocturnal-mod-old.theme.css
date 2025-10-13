@@ -50,7 +50,8 @@
     --rs-phone-visible: block;
     --rs-phone-color: var(--rs-online-color);
 
-    --customFont: "gg sans", sans-serif;
+    --customfont: "JetBrains Mono Medium", monospace;
+    --customfont-weight: 500;
 }
 
 :root {
@@ -147,7 +148,7 @@ div[class*="titleBar-"] {
         var(--backgroundColor02) 30%,
         70%,
         transparent
-    ) !important;
+        ) !important;
 }
 .container_fc4f04 {
     position: absolute !important;
