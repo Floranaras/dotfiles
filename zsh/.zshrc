@@ -61,8 +61,3 @@ export MESA_GL_VERSION_OVERRIDE=4.5
 export MESA_GLSL_VERSION_OVERRIDE=450
 export vblank_mode=0
 
-# Java rendering fixes for Intel graphics
-export _JAVA_OPTIONS="-Dsun.java2d.opengl=false -Dsun.java2d.xrender=false -Dsun.java2d.pmoffscreen=false -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dawt.toolkit.name=XToolkit"
-export MESA_GL_VERSION_OVERRIDE=4.5
-export MESA_GLSL_VERSION_OVERRIDE=450
-export vblank_mode=0
