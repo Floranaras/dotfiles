@@ -1,5 +1,3 @@
-## My Dotfiles - Hyprland Anime-Inspired Rice
-
 > A beautiful, minimal, and expressive Hyprland setup themed around a serene anime night sky
 
 This repository contains my personal configuration files (dotfiles) for various applications and tools I use. These configurations help me maintain a consistent and efficient working environment across different machines, with a focus on an **anime-style aesthetic** featuring deep blues, rich purples, and gentle pinks painting the horizon.
@@ -67,7 +65,7 @@ Deep blues, purples, and gentle pinks create a serene workspace inspired by star
 Zsh with eza file listing, tree views, and productivity aliases. See [SHELL.md](docs/SHELL.md) for all aliases.
 
 ### **Powerful Neovim Setup**
-Complete LSP configuration for multiple languages (C/C++, Lua, Java, HTML/CSS/JS), live web development server, Emmet support, database management with vim-dadbod, and markdown preview. Full details in [NEOVIM.md](docs/NEOVIM.md), [WEBDEV.md](docs/WEBDEV.md), and [NEOVIM_DB.md](docs/NEOVIM_DB.md).
+Complete LSP configuration for multiple languages (C/C++, Lua, Java, HTML/CSS/JS), live web development server, Emmet support, database management with vim-dadbod, and markdown preview. Full details in [NEOVIM.md](docs/NEOVIM.md), [WEBDEV_SETUP.md](docs/WEBDEV_SETUP.md), and [NEOVIM_DB.md](docs/NEOVIM_DB.md).
 
 ### **Hyprland Integration**
 Dynamic tiling with smooth animations and custom keybinds optimized for productivity.

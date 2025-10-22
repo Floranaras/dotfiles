@@ -18,7 +18,11 @@ exec --no-startup-id hyprpaper  # Wallpaper daemon
 exec --no-startup-id waybar     # Status bar
 
 # Screen lock
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+bindsym $mod+u exec ~/bin/lock.sh
+exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/bin/lock.sh --nofork
+
+# Lock screen when lid is closed
+bindcode 248 exec ~/bin/lock.sh
 
 # Audio (volume) controls using wpctl
 bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
