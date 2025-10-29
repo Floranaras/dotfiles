@@ -116,10 +116,8 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-# Status bar
-bar {
-    status_command i3status
-}
+# Polybar
+exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 exec --no-startup-id export GTK_THEME="Rose-Pine"
 exec --no-startup-id export ICON_THEME="Rose-Pine"
