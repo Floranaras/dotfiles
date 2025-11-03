@@ -60,3 +60,5 @@ alias report="open build/reports/tests/test/index.html"
 export MESA_GL_VERSION_OVERRIDE=4.5
 export MESA_GLSL_VERSION_OVERRIDE=450
 export vblank_mode=0
+export CATALINA_HOME=/usr/share/tomcat9
+export PATH=$PATH:$CATALINA_HOME/bin
