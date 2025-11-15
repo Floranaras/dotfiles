@@ -47,23 +47,44 @@ vim.keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights
 vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 vim.keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
 
--- Window resizing
-vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease window width" })
-vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase window width" })
-vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase window height" })
-vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
+-- PROJECT NAVIGATION SUPERPOWERS
+-- Open file explorer at project root
+vim.keymap.set("n", "<leader>pr", function()
+    vim.cmd("Explore " .. vim.fn.getcwd())
+end, { desc = "Project root explorer" })
 
--- Window navigation
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Navigate to left window" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Navigate to right window" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Navigate to window below" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Navigate to window above" })
+-- Create new file in current directory
+vim.keymap.set("n", "<leader>nf", function()
+    local filename = vim.fn.input("New file (relative to current): ")
+    if filename ~= "" then
+        local current_dir = vim.fn.expand("%:p:h")
+        vim.cmd("e " .. current_dir .. "/" .. filename)
+    end
+end, { desc = "New file in current dir" })
 
--- Equalize and maximize windows
-vim.keymap.set("n", "<leader>we", "<C-w>=", { desc = "Equalize window sizes" })
-vim.keymap.set("n", "<leader>wm", "<C-w>_<C-w>|", { desc = "Maximize current window" })
+-- Create new file from project root
+vim.keymap.set("n", "<leader>nF", function()
+    local filename = vim.fn.input("New file (from root): ")
+    if filename ~= "" then
+        vim.cmd("e " .. vim.fn.getcwd() .. "/" .. filename)
+    end
+end, { desc = "New file from project root" })
 
--- Close windows
-vim.keymap.set("n", "<leader>wc", "<C-w>c", { desc = "Close current window" })
-vim.keymap.set("n", "<leader>wo", "<C-w>o", { desc = "Close all other windows" })
+-- Run gradle from anywhere
+vim.keymap.set("n", "<leader>gr", function()
+    vim.cmd("below terminal cd " .. vim.fn.getcwd() .. " && ./gradlew run")
+end, { desc = "Gradle run" })
 
+vim.keymap.set("n", "<leader>gb", function()
+    vim.cmd("below terminal cd " .. vim.fn.getcwd() .. " && ./gradlew build")
+end, { desc = "Gradle build" })
+
+vim.keymap.set("n", "<leader>gt", function()
+    vim.cmd("below terminal cd " .. vim.fn.getcwd() .. " && ./gradlew test")
+end, { desc = "Gradle test" })
+
+-- Quick terminal at project root
+vim.keymap.set("n", "<leader>tt", function()
+    vim.cmd("below terminal")
+    vim.cmd("startinsert")
+end, { desc = "Terminal at project root" })
