@@ -1,8 +1,8 @@
 /**
-* @name Nocturnal
+* @name Rose Pine
 * @version 3.0.1
-* @description For when default discord just isn't dark enough, a theme for those who live a night
-* @author Spectra
+* @description A cozy Rose Pine theme for Discord
+* @author Spectra (Modified with Rose Pine palette)
 * @invite PZdnCVD
 * @source https://github.com/xcruxiex/themes
 * @website https://betterdiscord.app/theme/Nocturnal
@@ -21,11 +21,11 @@
 :root {
     --backgroundColor01: #1f1d2e;
     --backgroundColor02: #191724;
-    --backgroundColor03: #1f1d2e;
-    --backgroundColor04: #26233a;
-    --mainColor: #ebbcba;
-    --gradientColor01: #ebbcba;
-    --gradientColor02: #ea9a97;
+    --backgroundColor03: #26233a;
+    --backgroundColor04: #403d52;
+    --mainColor: #eb6f92;
+    --gradientColor01: #eb6f92;
+    --gradientColor02: #c4a7e7;
 
     --textColor01: #e0def4;
     --textColor02: #908caa;
