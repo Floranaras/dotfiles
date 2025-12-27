@@ -122,3 +122,5 @@ exec_always --no-startup-id ~/.config/polybar/launch.sh
 exec --no-startup-id export GTK_THEME="Rose-Pine"
 exec --no-startup-id export ICON_THEME="Rose-Pine"
 
+# Autorandr
+exec_always --no-startup-id autorandr --change
