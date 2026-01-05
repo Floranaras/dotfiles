@@ -62,3 +62,6 @@ export MESA_GLSL_VERSION_OVERRIDE=450
 export vblank_mode=0
 export CATALINA_HOME=/usr/share/tomcat9
 export PATH=$PATH:$CATALINA_HOME/bin
+export QT_QPA_PLATFORMTHEME=qt5ct
+export EDITOR="nvim"
+export VISUAL="nvim"
