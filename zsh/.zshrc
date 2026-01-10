@@ -1,38 +1,36 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
-
-# Path to your Oh My Zsh installation.
+# Oh My Zsh Configuration
 export ZSH="$HOME/.oh-my-zsh"
-
-export PATH="/usr/local/mysql/bin:$PATH"
-
-# Set name of the theme to load.
 ZSH_THEME="robbyrussell"
-
-# Load plugins
 plugins=(git)
-
-# Source Oh My Zsh
 source "$ZSH/oh-my-zsh.sh"
 
-# Set Rust and Ghostty config
-. "$HOME/.cargo/env"
-export GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
+# PATH Configuration
+export PATH="/usr/local/mysql/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$CATALINA_HOME/bin"
+export PATH="$HOME/.npm-global/bin:$PATH"
 
-# Aliases
+# Environment Variables
+export GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
+export CATALINA_HOME=/usr/share/tomcat9
+export EDITOR="nvim"
+export VISUAL="nvim"
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# Graphics Settings (Mesa/OpenGL)
+export MESA_GL_VERSION_OVERRIDE=4.5
+export MESA_GLSL_VERSION_OVERRIDE=450
+export vblank_mode=0
+
+# Cargo (Rust)
+. "$HOME/.cargo/env"
+
+# Aliases - General
+alias vi="nvim"
 alias ctags="/opt/homebrew/bin/ctags"
 
-
-# Created by `pipx` on 2025-07-08 08:32:35
-export PATH="$PATH:/Users/callo/.local/bin"
-export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:$HOME/.local/bin"
-
-# eza 
-alias l="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=2"
-alias l1="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=3"
-alias l2="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=4"
+# Aliases - eza (ls replacement)
 alias ls="eza --icons"
 alias ll="eza -lg --icons"
 alias la="eza -lag --icons"
@@ -40,9 +38,15 @@ alias lt="eza -lag --icons"
 alias lt1="eza -lag --level=1 --icons"
 alias lt2="eza -lag --level=2 --icons"
 alias lt3="eza -lag --level=3 --icons"
+alias l="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=2"
+alias l1="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=3"
+alias l2="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=4"
 
-# gradle
+# Aliases - Gradle
 alias grun="./gradlew run -q --console=plain"
+alias report="open build/reports/tests/test/index.html"
+
+# Functions
 ginit() {
     if [ -z "$1" ]; then
         echo "Usage: ginit <project-name>"
@@ -54,14 +58,3 @@ ginit() {
     echo "Creating Java project with package: com.$1"
     gradle init --type java-application --package "$1"
 }
-
-alias vi="nvim"
-alias report="open build/reports/tests/test/index.html"
-export MESA_GL_VERSION_OVERRIDE=4.5
-export MESA_GLSL_VERSION_OVERRIDE=450
-export vblank_mode=0
-export CATALINA_HOME=/usr/share/tomcat9
-export PATH=$PATH:$CATALINA_HOME/bin
-export QT_QPA_PLATFORMTHEME=qt5ct
-export EDITOR="nvim"
-export VISUAL="nvim"
