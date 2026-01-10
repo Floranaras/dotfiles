@@ -8,7 +8,6 @@ return {
 				check_ts = true,
 			})
 
-			-- Integration with nvim-cmp
 			local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 			local cmp = require('cmp')
 			cmp.event:on(
