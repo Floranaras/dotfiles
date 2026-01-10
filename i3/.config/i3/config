@@ -1,9 +1,6 @@
-# i3 config file
-
 set $mod Mod4
 
 # --- FONTS ---
-# This enables JetBrains Mono for code and Source Han Sans for Japanese text
 font pango:JetBrainsMono Nerd Font, Source Han Sans JP 10
 
 # --- APPS ---
@@ -12,16 +9,12 @@ set $fileManager pcmanfm
 set $menu rofi -show drun -theme ~/.config/rofi/rose-pine.rasi
 
 # --- HARDWARE AUTOMATION ---
-# 1. Wait for Intel driver then force the monitor profile
-exec --no-startup-id "sleep 2 && autorandr --change --force"
+exec --no-startup-id "sleep 2 && autorandr --change --default desk"
 
-# 2. Start Polybar (Handles the HiDPI vs 1080p switch)
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 
-# 3. Apply Dark Mode colors for nsxiv and other X11 apps
 exec_always --no-startup-id xrdb -load ~/.Xresources
 
-# 4. Fix the mouse cursor (Rose Pine) and the "Ugly X" bug
 exec_always --no-startup-id xsetroot -cursor_name left_ptr
 
 # --- DAEMONS ---
@@ -38,7 +31,6 @@ bindsym $mod+q kill
 bindsym $mod+u exec ~/bin/lock.sh
 
 # --- SCREENSHOTS (X11 Version) ---
-# Saves to ~/Pictures/
 bindsym Print exec scrot '%Y-%m-%d-%s_screenshot.png' -e 'mv $f ~/Pictures/'
 bindsym $mod+Print exec scrot -s '%Y-%m-%d-%s_screenshot.png' -e 'mv $f ~/Pictures/'
 
