@@ -116,6 +116,11 @@ Leader key: `<Space>`
 |-----|--------|
 | `<leader>mm` | Open browser to preview mermaid/markdown files |
 
+### Typst
+| Key | Action |
+|-----|--------|
+| `<leader>mt` | Toggle typst preview |
+
 
 ### Markdown
 | Key | Action |
