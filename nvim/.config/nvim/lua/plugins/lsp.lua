@@ -10,10 +10,9 @@ return {
 
             require("mason").setup()
             require("mason-lspconfig").setup({
-                ensure_installed = { "clangd", "lua_ls" },
+                ensure_installed = { "clangd", "lua_ls", "tailwindcss" },
             })
 
-            -- Use new vim.lsp.config API (Neovim 0.11+)
             vim.lsp.config.clangd = {
                 cmd = { "clangd" },
                 filetypes = { "c", "cpp", "objc", "objcpp" },
@@ -35,9 +34,31 @@ return {
                 },
             }
 
+            -- Tailwind CSS LSP
+            vim.lsp.config.tailwindcss = {
+                cmd = { "tailwindcss-language-server", "--stdio" },
+                filetypes = {
+                    "html",
+                    "css",
+                    "scss",
+                    "javascript",
+                    "javascriptreact",
+                    "typescript",
+                    "typescriptreact",
+                },
+                root_markers = { 
+                    "tailwind.config.js", 
+                    "tailwind.config.ts", 
+                    "tailwind.config.cjs",
+                    "package.json" 
+                },
+                capabilities = capabilities,
+            }
+
             -- Enable LSP servers
             vim.lsp.enable("clangd")
             vim.lsp.enable("lua_ls")
+            vim.lsp.enable("tailwindcss")
 
             -- LSP Keybindings
             vim.api.nvim_create_autocmd('LspAttach', {
@@ -70,6 +91,7 @@ return {
             "hrsh7th/cmp-cmdline",
             "saadparwaiz1/cmp_luasnip",
             "L3MON4D3/LuaSnip",
+            "roobert/tailwindcss-colorizer-cmp.nvim",
         },
         config = function()
             local cmp = require('cmp')
@@ -94,6 +116,12 @@ return {
                     { name = 'luasnip' },
                     { name = 'buffer' },
                 }),
+                formatting = {
+                    format = function(entry, item)
+                        -- Add Tailwind color squares
+                        return require("tailwindcss-colorizer-cmp").formatter(entry, item)
+                    end,
+                },
             })
         end,
     },
