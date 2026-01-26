@@ -52,6 +52,27 @@ vim.opt.splitbelow = true
 -- Better backspace behavior
 vim.opt.backspace = "indent,eol,start"
 
+-- Web development specific settings (2 spaces)
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = {
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+        "html",
+        "css",
+        "json",
+        "jsx",
+        "tsx"
+    },
+    callback = function()
+        vim.opt_local.tabstop = 2
+        vim.opt_local.softtabstop = 2
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.expandtab = true
+    end,
+})
+
 -- C/C++ specific settings
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "c", "cpp" },
