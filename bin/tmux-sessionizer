@@ -1,31 +1,59 @@
 #!/usr/bin/env bash
 
+# 1. Check if an argument was passed (e.g., specific folder)
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    # This manually adds your "Hub" folders to the search list
+    # 2. Define the folders you want to search
+    # Using $HOME is safer than ~ in scripts
+    folders=(
+        "$HOME/Dotfiles"
+        "$HOME/Github"     # Check if you named this 'Github' or 'github'
+        "$HOME/Codes"
+        "$HOME/Documents/college"
+        "$HOME/Downloads"
+    )
+
+    # 3. Filter list: Only look in folders that ACTUALLY exist
+    # This prevents the "No such file or directory" error
+    existing_folders=""
+    search_list=""
+
+    for folder in "${folders[@]}"; do
+        if [[ -d "$folder" ]]; then
+            existing_folders+="$folder "
+            search_list+="$folder\n"
+        fi
+    done
+
+    # 4. Run fzf
     selected=$( {
-        printf "~/Dotfiles\n~/Github\n~/Codes\n~/Documents/college\n~/Downloads\n"
-        find ~/Github ~/Documents/college ~/Codes ~/Downloads ~/Dotfiles -mindepth 1 -maxdepth 1 -type d
-    } | fzf)
+        printf "$search_list"
+        # Only run find if we actually found existing folders
+        if [[ -n "$existing_folders" ]]; then
+            find $existing_folders -mindepth 1 -maxdepth 1 -type d
+        fi
+    } | fzf )
 fi
 
+# 5. Exit if user cancelled fzf (ESC)
 if [[ -z $selected ]]; then
     exit 0
 fi
 
-# Convert ~ to real path
-selected=$(eval echo "$selected")
+# 6. Create a session name (basename of the directory)
 selected_name=$(basename "$selected" | tr . _)
-tmux_running=$(pgrep tmux)
 
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
-    exit 0
-fi
-
+# 7. Create the session if it doesn't exist (running in background -d)
 if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
+    tmux new-session -ds $selected_name -c "$selected"
 fi
 
-tmux switch-client -t $selected_name
+# 8. THE CRITICAL FIX: Attach if outside, Switch if inside
+if [[ -z $TMUX ]]; then
+    # We are in a normal terminal -> Attach
+    tmux attach-session -t $selected_name
+else
+    # We are already in tmux -> Switch
+    tmux switch-client -t $selected_name
+fi
