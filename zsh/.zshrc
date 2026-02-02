@@ -38,9 +38,10 @@ alias lt="eza -lag --icons"
 alias lt1="eza -lag --level=1 --icons"
 alias lt2="eza -lag --level=2 --icons"
 alias lt3="eza -lag --level=3 --icons"
-alias l="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=2"
+alias l="eza --tree --git-ignore --icons --level=5 --group-directories-first"
 alias l1="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=3"
 alias l2="eza --tree --no-permissions --no-user --no-time --no-filesize --icons --level=4"
+alias lw="eza --tree --git-ignore --no-permissions --no-user --no-time --no-filesize --icons --level=5"
 
 # Aliases - Gradle
 alias grun="./gradlew run -q --console=plain"
@@ -58,3 +59,13 @@ ginit() {
     echo "Creating Java project with package: com.$1"
     gradle init --type java-application --package "$1"
 }
+
+# Run the organizer script
+/usr/local/bin/organize-downloads.sh
+
+export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
+alias fastfetch="anifetch anifetch/src/anifetch/assets/badapple.mp4"
+
+export PATH="$HOME/Dotfiles/bin:$PATH"
+eval "$(zoxide init zsh)"
+bindkey -s '^f' 'tmux-sessionizer\n'
