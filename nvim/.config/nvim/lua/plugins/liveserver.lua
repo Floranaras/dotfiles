@@ -12,7 +12,7 @@ return {
 
             -- Auto-save frequently for seamless updates
             vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "InsertLeave" }, {
-                pattern = { "*.html", "*.css", "*.js"},
+                pattern = { "*.html", "*.css", "*.js", "*.rs"},
                 callback = function()
                     vim.cmd("silent! write")
                 end,
