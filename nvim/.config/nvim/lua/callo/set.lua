@@ -34,8 +34,6 @@ vim.opt.shell = "/bin/bash"
 
 vim.g.mapleader = " "
 
--- Additional settings from your config
--- System clipboard integration
 vim.opt.clipboard = "unnamedplus"
 
 -- Enhanced cursor line
@@ -49,10 +47,8 @@ vim.opt.smartcase = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- Better backspace behavior
 vim.opt.backspace = "indent,eol,start"
 
--- Web development specific settings (2 spaces)
 vim.api.nvim_create_autocmd("FileType", {
     pattern = {
         "javascript",
@@ -73,13 +69,12 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- C/C++ specific settings
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "c", "cpp" },
     callback = function()
-        vim.opt_local.tabstop = 4
-        vim.opt_local.shiftwidth = 4
-        vim.opt_local.expandtab = false  -- Use actual tabs for C/C++
+        vim.opt_local.tabstop = 8
+        vim.opt_local.shiftwidth = 8
+        vim.opt_local.expandtab = false
         vim.opt_local.cindent = true
         vim.opt_local.cinoptions = ":0,l1,t0,+4,(0,u0,w1"
         vim.opt_local.autoindent = true

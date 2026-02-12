@@ -47,13 +47,10 @@ vim.keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights
 vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 vim.keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
 
--- PROJECT NAVIGATION SUPERPOWERS
--- Open file explorer at project root
 vim.keymap.set("n", "<leader>pr", function()
     vim.cmd("Explore " .. vim.fn.getcwd())
 end, { desc = "Project root explorer" })
 
--- Create new file in current directory
 vim.keymap.set("n", "<leader>nf", function()
     local filename = vim.fn.input("New file (relative to current): ")
     if filename ~= "" then
@@ -62,7 +59,6 @@ vim.keymap.set("n", "<leader>nf", function()
     end
 end, { desc = "New file in current dir" })
 
--- Create new file from project root
 vim.keymap.set("n", "<leader>nF", function()
     local filename = vim.fn.input("New file (from root): ")
     if filename ~= "" then
@@ -70,7 +66,6 @@ vim.keymap.set("n", "<leader>nF", function()
     end
 end, { desc = "New file from project root" })
 
--- Run gradle from anywhere
 vim.keymap.set("n", "<leader>gr", function()
     vim.cmd("below terminal cd " .. vim.fn.getcwd() .. " && ./gradlew run")
 end, { desc = "Gradle run" })
@@ -83,7 +78,6 @@ vim.keymap.set("n", "<leader>gt", function()
     vim.cmd("below terminal cd " .. vim.fn.getcwd() .. " && ./gradlew test")
 end, { desc = "Gradle test" })
 
--- Quick terminal at project root
 vim.keymap.set("n", "<leader>tt", function()
     vim.cmd("below terminal")
     vim.cmd("startinsert")
