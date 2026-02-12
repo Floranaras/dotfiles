@@ -1,0 +1,271 @@
+#!/bin/bash
+
+################################################################################
+# FILE CONVERTER - Multi-format file conversion tool
+################################################################################
+#
+# A CLI tool for converting between video, audio, image, and document formats
+# with optional Discord-friendly compression.
+#
+# AUTHOR: Amane Kai / 雨音カイ
+# VERSION: 1.0.0
+# DEPENDENCIES: ffmpeg, ffprobe, bc, libreoffice (for documents)
+#
+################################################################################
+
+show_help() {
+    cat << 'EOF'
+FILE CONVERTER - Multi-format conversion tool
+Version 1.0.0
+
+USAGE:
+    fconv <input_file> <output_format> [options]
+    fconv <input_file> <output_file> [options]
+
+SUPPORTED FORMATS:
+    Video:      mp4
+    Audio:      mp3
+    Images:     png, jpeg, jpg
+    Documents:  pdf, docx, doc
+
+OPTIONS:
+    Discord Compression:
+        -d, --discord              Enable Discord compression (10MB default)
+        -s, --size <MB>            Target size in MB (use with --discord)
+                                   Common: 10 (free), 50 (Nitro), 500 (Nitro boost)
+
+    Video Quality:
+        -b, --bitrate <kbps>       Video bitrate in kbps (e.g., 2000, 5000)
+        -crf, --crf <0-51>         Constant Rate Factor (default: 23)
+                                   Lower = better quality, bigger file
+                                   0=lossless, 18=high, 23=default, 28=low
+
+    Video Properties:
+        -r, --resolution <WxH>     Resolution (e.g., 1920x1080, 1280x720)
+        -fps <number>              Frame rate (e.g., 24, 30, 60)
+
+    Audio Quality:
+        -a, --audio <kbps>         Audio bitrate (default: 192 for video/audio)
+                                   Common: 128, 192, 256, 320
+        -q, --quality <0-9>        MP3 VBR quality (default: 2)
+                                   0=best (~245kbps), 2=high (~190kbps),
+                                   4=medium (~165kbps), 6=low (~115kbps)
+
+    Output:
+        -o, --output <file>        Custom output filename
+        -h, --help                 Show this help message
+
+EOF
+}
+
+if [ $# -eq 0 ] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+# Parse arguments
+INPUT="$1"
+shift
+
+# Check if input exists
+if [ ! -f "$INPUT" ]; then
+    echo "Error: File '$INPUT' not found" >&2
+    exit 1
+fi
+
+FILENAME=$(basename "$INPUT")
+INPUT_EXT="${FILENAME##*.}"
+NAME="${FILENAME%.*}"
+
+# Defaults
+DISCORD_MODE=false
+TARGET_SIZE=10
+AUDIO_BITRATE=""
+VIDEO_BITRATE=""
+MP3_QUALITY=2
+CRF=23
+RESOLUTION=""
+FPS=""
+OUTPUT_FILE=""
+OUTPUT_FORMAT=""
+
+# Check if second argument is output file or format
+if [ $# -gt 0 ] && [[ ! "$1" =~ ^- ]]; then
+    SECOND_ARG="$1"
+    shift
+    
+    # Check if it has an extension (output file) or is just a format
+    if [[ "$SECOND_ARG" == *.* ]]; then
+        # It's a full filename
+        OUTPUT_FILE="$SECOND_ARG"
+        OUTPUT_FORMAT="${SECOND_ARG##*.}"
+    else
+        # It's just a format
+        OUTPUT_FORMAT="$SECOND_ARG"
+    fi
+fi
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -d|--discord)
+            DISCORD_MODE=true
+            shift
+            ;;
+        -s|--size)
+            TARGET_SIZE="$2"
+            shift 2
+            ;;
+        -b|--bitrate)
+            VIDEO_BITRATE="$2"
+            shift 2
+            ;;
+        -a|--audio)
+            AUDIO_BITRATE="$2"
+            shift 2
+            ;;
+        -q|--quality)
+            MP3_QUALITY="$2"
+            shift 2
+            ;;
+        -crf|--crf)
+            CRF="$2"
+            shift 2
+            ;;
+        -r|--resolution)
+            RESOLUTION="$2"
+            shift 2
+            ;;
+        -fps)
+            FPS="$2"
+            shift 2
+            ;;
+        -o|--output)
+            OUTPUT_FILE="$2"
+            OUTPUT_FORMAT="${OUTPUT_FILE##*.}"
+            shift 2
+            ;;
+        *)
+            echo "Error: Unknown option: $1" >&2
+            echo "Use 'fconv --help' for usage information" >&2
+            exit 1
+            ;;
+    esac
+done
+
+# If no output format specified, use same as input
+if [ -z "$OUTPUT_FORMAT" ]; then
+    OUTPUT_FORMAT="$INPUT_EXT"
+fi
+
+# Set output filename if not specified
+if [ -z "$OUTPUT_FILE" ]; then
+    OUTPUT_FILE="${NAME}.${OUTPUT_FORMAT}"
+fi
+
+# Validate output format
+case "$OUTPUT_FORMAT" in
+    mp4|mp3|png|jpeg|jpg|pdf|docx|doc)
+        ;;
+    *)
+        echo "Error: Unsupported output format: $OUTPUT_FORMAT" >&2
+        echo "Supported formats: mp4, mp3, png, jpeg, jpg, pdf, docx, doc" >&2
+        exit 1
+        ;;
+esac
+
+# Set default audio bitrate if not specified
+if [ -z "$AUDIO_BITRATE" ]; then
+    AUDIO_BITRATE=192
+fi
+
+echo "Converting: $INPUT -> $OUTPUT_FILE"
+
+# VIDEO CONVERSIONS
+if [[ "$OUTPUT_FORMAT" == "mp4" ]]; then
+    FFMPEG_CMD="ffmpeg -i \"$INPUT\""
+    
+    # Resolution
+    if [ -n "$RESOLUTION" ]; then
+        FFMPEG_CMD="$FFMPEG_CMD -vf scale=$RESOLUTION"
+        echo "Resolution: $RESOLUTION"
+    fi
+    
+    # Frame rate
+    if [ -n "$FPS" ]; then
+        FFMPEG_CMD="$FFMPEG_CMD -r $FPS"
+        echo "Frame rate: ${FPS}fps"
+    fi
+    
+    # Video encoding
+    if [ -n "$VIDEO_BITRATE" ]; then
+        # Manual bitrate specified
+        FFMPEG_CMD="$FFMPEG_CMD -c:v libx264 -b:v ${VIDEO_BITRATE}k -maxrate ${VIDEO_BITRATE}k -bufsize $((VIDEO_BITRATE * 2))k"
+        echo "Video bitrate: ${VIDEO_BITRATE}kbps (manual)"
+    elif [ "$DISCORD_MODE" = true ]; then
+        # Discord compression mode
+        FILESIZE=$(stat -f%z "$INPUT" 2>/dev/null || stat -c%s "$INPUT" 2>/dev/null)
+        TARGET_SIZE_BYTES=$((TARGET_SIZE * 1024 * 1024))
+        
+        if [ $FILESIZE -gt $TARGET_SIZE_BYTES ]; then
+            DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$INPUT")
+            TARGET_BITRATE=$(echo "scale=0; ($TARGET_SIZE_BYTES * 8 / $DURATION) - ${AUDIO_BITRATE}000" | bc)
+            FFMPEG_CMD="$FFMPEG_CMD -c:v libx264 -b:v ${TARGET_BITRATE} -maxrate ${TARGET_BITRATE} -bufsize $((TARGET_BITRATE * 2))"
+            echo "Discord mode: Compressing to ${TARGET_SIZE}MB (bitrate: ${TARGET_BITRATE}bps)"
+        else
+            FFMPEG_CMD="$FFMPEG_CMD -c:v libx264 -crf $CRF"
+            echo "Discord mode: File already under ${TARGET_SIZE}MB, using CRF $CRF"
+        fi
+    else
+        # Default: no compression, just convert
+        FFMPEG_CMD="$FFMPEG_CMD -c:v libx264 -crf $CRF"
+        echo "Quality: CRF $CRF (no size-based compression)"
+    fi
+    
+    # Audio
+    FFMPEG_CMD="$FFMPEG_CMD -c:a aac -b:a ${AUDIO_BITRATE}k -movflags +faststart \"$OUTPUT_FILE\""
+    echo "Audio bitrate: ${AUDIO_BITRATE}kbps"
+    
+    eval $FFMPEG_CMD
+
+# AUDIO CONVERSIONS
+elif [[ "$OUTPUT_FORMAT" == "mp3" ]]; then
+    ffmpeg -i "$INPUT" -vn -c:a libmp3lame -q:a $MP3_QUALITY -b:a ${AUDIO_BITRATE}k "$OUTPUT_FILE"
+    echo "MP3 quality: $MP3_QUALITY, bitrate: ${AUDIO_BITRATE}kbps"
+
+# IMAGE CONVERSIONS
+elif [[ "$OUTPUT_FORMAT" == "png" ]] || [[ "$OUTPUT_FORMAT" == "jpeg" ]] || [[ "$OUTPUT_FORMAT" == "jpg" ]]; then
+    ffmpeg -i "$INPUT" "$OUTPUT_FILE"
+
+# DOCUMENT CONVERSIONS
+elif [[ "$OUTPUT_FORMAT" == "pdf" ]] || [[ "$OUTPUT_FORMAT" == "docx" ]] || [[ "$OUTPUT_FORMAT" == "doc" ]]; then
+    if command -v libreoffice &> /dev/null; then
+        libreoffice --headless --convert-to $OUTPUT_FORMAT "$INPUT" --outdir "$(dirname "$OUTPUT_FILE")"
+        # Rename if custom output name was specified
+        TEMP_OUTPUT="${NAME}.${OUTPUT_FORMAT}"
+        if [ "$TEMP_OUTPUT" != "$OUTPUT_FILE" ] && [ -f "$TEMP_OUTPUT" ]; then
+            mv "$TEMP_OUTPUT" "$OUTPUT_FILE"
+        fi
+    else
+        echo "Error: LibreOffice required for document conversion" >&2
+        echo "Install: brew install libreoffice (Mac) or apt install libreoffice (Linux)" >&2
+        exit 1
+    fi
+
+else
+    echo "Error: Unsupported output format: $OUTPUT_FORMAT" >&2
+    echo "Supported formats: mp4, mp3, png, jpeg, jpg, pdf, docx, doc" >&2
+    exit 1
+fi
+
+if [ -f "$OUTPUT_FILE" ]; then
+    OUTPUT_SIZE=$(du -h "$OUTPUT_FILE" | cut -f1)
+    echo "Success: $OUTPUT_FILE ($OUTPUT_SIZE)"
+else
+    echo "Failed to create output file" >&2
+    exit 1
+fi
