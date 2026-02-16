@@ -61,7 +61,7 @@ ginit() {
 }
 
 # Run the organizer script
-/usr/local/bin/organize-downloads.sh
+[[ "$OSTYPE" == "darwin"* ]] && /usr/local/bin/organize-downloads.sh
 
 export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 alias fastfetch="anifetch anifetch/src/anifetch/assets/badapple.mp4"
