@@ -69,3 +69,5 @@ alias fastfetch="anifetch anifetch/src/anifetch/assets/badapple.mp4"
 export PATH="$HOME/Dotfiles/bin:$PATH"
 eval "$(zoxide init zsh)"
 bindkey -s '^f' 'tmux-sessionizer\n'
+
+alias jqinit='npm init -y && npm install --save-dev @types/jquery'

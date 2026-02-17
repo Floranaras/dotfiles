@@ -55,6 +55,29 @@ return {
                 capabilities = capabilities,
             }
 
+            vim.lsp.config.html = {
+                cmd = { "vscode-html-language-server", "--stdio" },
+                filetypes = { "html" },
+                root_markers = { ".git" },
+                capabilities = capabilities,
+                -- This enables JS/CSS inside HTML!
+                init_options = {
+                    provideFormatter = true,
+                    embeddedLanguages = {
+                        css = true,
+                        javascript = true,
+                    },
+                    configurationSection = { "html", "css", "javascript" },
+                },
+            }
+
+            vim.lsp.config.ts_ls = {
+                cmd = { "typescript-language-server", "--stdio" },
+                filetypes = { "javascript", "javascriptreact", "html" }, -- add html here
+                root_markers = { ".git", "package.json" },
+                capabilities = capabilities,
+            }
+
             -- Enable LSP servers
             vim.lsp.enable("clangd")
             vim.lsp.enable("lua_ls")
