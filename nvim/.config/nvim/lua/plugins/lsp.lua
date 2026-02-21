@@ -6,12 +6,12 @@ return {
             "williamboman/mason-lspconfig.nvim",
         },
         config = function()
-            local capabilities = vim.lsp.protocol.make_client_capabilities()
-
             require("mason").setup()
             require("mason-lspconfig").setup({
-                ensure_installed = { "clangd", "lua_ls", "tailwindcss" },
+                ensure_installed = { "clangd", "lua_ls", "tailwindcss", "html", "ts_ls" },
             })
+
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
 
             vim.lsp.config.clangd = {
                 cmd = { "clangd" },
@@ -34,7 +34,6 @@ return {
                 },
             }
 
-            -- Tailwind CSS LSP
             vim.lsp.config.tailwindcss = {
                 cmd = { "tailwindcss-language-server", "--stdio" },
                 filetypes = {
@@ -46,11 +45,11 @@ return {
                     "typescript",
                     "typescriptreact",
                 },
-                root_markers = { 
-                    "tailwind.config.js", 
-                    "tailwind.config.ts", 
+                root_markers = {
+                    "tailwind.config.js",
+                    "tailwind.config.ts",
                     "tailwind.config.cjs",
-                    "package.json" 
+                    "package.json"
                 },
                 capabilities = capabilities,
             }
@@ -58,9 +57,8 @@ return {
             vim.lsp.config.html = {
                 cmd = { "vscode-html-language-server", "--stdio" },
                 filetypes = { "html" },
-                root_markers = { ".git" },
+                root_markers = { ".git", "package.json" },
                 capabilities = capabilities,
-                -- This enables JS/CSS inside HTML!
                 init_options = {
                     provideFormatter = true,
                     embeddedLanguages = {
@@ -73,38 +71,39 @@ return {
 
             vim.lsp.config.ts_ls = {
                 cmd = { "typescript-language-server", "--stdio" },
-                filetypes = { "javascript", "javascriptreact", "html" }, -- add html here
-                root_markers = { ".git", "package.json" },
+                filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+                root_markers = { ".git", "package.json", "tsconfig.json" },
                 capabilities = capabilities,
             }
 
-            -- Enable LSP servers
+            -- Enable all configured LSP servers
             vim.lsp.enable("clangd")
             vim.lsp.enable("lua_ls")
             vim.lsp.enable("tailwindcss")
+            vim.lsp.enable("html")
+            vim.lsp.enable("ts_ls")
 
-            -- LSP Keybindings
+            -- LSP Keybindings - attached when LSP connects to buffer
             vim.api.nvim_create_autocmd('LspAttach', {
                 group = vim.api.nvim_create_augroup('user_lsp_attach', { clear = true }),
                 callback = function(event)
                     local opts = { buffer = event.buf }
 
-                    vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, opts)
-                    vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
-                    vim.keymap.set('n', '<leader>vws', function() vim.lsp.buf.workspace_symbol() end, opts)
-                    vim.keymap.set('n', '<leader>vd', function() vim.diagnostic.open_float() end, opts)
-                    vim.keymap.set('n', '[d', function() vim.diagnostic.goto_next() end, opts)
-                    vim.keymap.set('n', ']d', function() vim.diagnostic.goto_prev() end, opts)
-                    vim.keymap.set('n', '<leader>vca', function() vim.lsp.buf.code_action() end, opts)
-                    vim.keymap.set('n', '<leader>vrr', function() vim.lsp.buf.references() end, opts)
-                    vim.keymap.set('n', '<leader>vrn', function() vim.lsp.buf.rename() end, opts)
-                    vim.keymap.set('i', '<C-h>', function() vim.lsp.buf.signature_help() end, opts)
+                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+                    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+                    vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
+                    vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
+                    vim.keymap.set('n', '[d', vim.diagnostic.goto_next, opts)
+                    vim.keymap.set('n', ']d', vim.diagnostic.goto_prev, opts)
+                    vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
+                    vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.references, opts)
+                    vim.keymap.set('n', '<leader>vrn', vim.lsp.buf.rename, opts)
+                    vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help, opts)
                 end,
             })
         end,
     },
 
-    -- Completion Configuration
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
@@ -141,7 +140,6 @@ return {
                 }),
                 formatting = {
                     format = function(entry, item)
-                        -- Add Tailwind color squares
                         return require("tailwindcss-colorizer-cmp").formatter(entry, item)
                     end,
                 },
