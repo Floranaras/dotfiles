@@ -4,6 +4,7 @@ return {
     dependencies = {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
+        "mfussenegger/nvim-dap", -- Add DAP dependency
     },
     config = function()
         -- Cross-platform path detection (robust version)
@@ -123,10 +124,16 @@ return {
                     },
 
                     init_options = {
-                        bundles = {}
+                        bundles = {
+                            vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar", true)
+                        }
                     },
 
                     on_attach = function(client, bufnr)
+                        -- Setup DAP for Java
+                        local jdtls = require('jdtls')
+                        jdtls.setup_dap({ hotcodereplace = 'auto' })
+                        
                         local opts = { noremap = true, silent = true, buffer = bufnr }
 
                         -- Essential keybindings
@@ -137,6 +144,10 @@ return {
                         vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
                         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
                         vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+
+                        -- Java Debug keybindings
+                        vim.keymap.set('n', '<leader>df', jdtls.test_class, opts)
+                        vim.keymap.set('n', '<leader>dn', jdtls.test_nearest_method, opts)
 
                         -- Format on save (optional - comment out if you don't want this)
                         vim.api.nvim_create_autocmd("BufWritePre", {
