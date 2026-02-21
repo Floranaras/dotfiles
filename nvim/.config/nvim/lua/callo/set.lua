@@ -49,6 +49,30 @@ vim.opt.splitbelow = true
 
 vim.opt.backspace = "indent,eol,start"
 
+vim.diagnostic.config({
+    virtual_text = {
+        prefix = '●',
+        spacing = 4,
+    },
+    signs = true,
+    update_in_insert = false,
+    underline = true,
+    severity_sort = true,
+    float = {
+        border = 'rounded',
+        source = 'always',
+        header = '',
+        prefix = '',
+    },
+})
+
+-- Define diagnostic signs (the symbols in the gutter)
+local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = {
         "javascript",
@@ -80,5 +104,3 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.autoindent = true
     end,
 })
-
-
