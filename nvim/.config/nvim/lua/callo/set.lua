@@ -49,29 +49,30 @@ vim.opt.splitbelow = true
 
 vim.opt.backspace = "indent,eol,start"
 
+-- Better diagnostics
 vim.diagnostic.config({
     virtual_text = {
-        prefix = '●',
+        prefix = '●', -- Could be '■', '▎', 'x', '●'
         spacing = 4,
     },
-    signs = true,
-    update_in_insert = false,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.HINT] = "󰠠 ",
+            [vim.diagnostic.severity.INFO] = " ",
+        },
+    },
+    update_in_insert = false, -- Don't update diagnostics while typing
     underline = true,
-    severity_sort = true,
+    severity_sort = true, -- Show errors before warnings
     float = {
         border = 'rounded',
-        source = 'always',
+        source = 'always', -- Show source (e.g., eslint, tsserver)
         header = '',
         prefix = '',
     },
 })
-
--- Define diagnostic signs (the symbols in the gutter)
-local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = {
