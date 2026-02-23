@@ -1,59 +1,83 @@
 #!/usr/bin/env bash
 
-# 1. Check if an argument was passed (e.g., specific folder)
-if [[ $# -eq 1 ]]; then
-    selected=$1
-else
-    # 2. Define the folders you want to search
-    # Using $HOME is safer than ~ in scripts
-    folders=(
-        "$HOME/Dotfiles"
-        "$HOME/Github"     # Check if you named this 'Github' or 'github'
-        "$HOME/Codes"
-        "$HOME/Documents/college"
-        "$HOME/Downloads"
-    )
+# ==============================================================================
+# tmux-sessionizer
+# ------------------------------------------------------------------------------
+# Quickly jump between project directories as tmux sessions.
+# Inspired by ThePrimeagen.
+# ==============================================================================
 
-    # 3. Filter list: Only look in folders that ACTUALLY exist
-    # This prevents the "No such file or directory" error
-    existing_folders=""
-    search_list=""
+# --- Configuration ---
+SEARCH_PATHS=(
+    "$HOME/Dotfiles"
+    "$HOME/Github"
+    "$HOME/Codes"
+    "$HOME/Documents/college"
+    "$HOME/Downloads"
+)
 
-    for folder in "${folders[@]}"; do
-        if [[ -d "$folder" ]]; then
-            existing_folders+="$folder "
-            search_list+="$folder\n"
+# --- Functions ---
+
+# Get the list of all valid directories (the base paths + their subdirectories)
+list_potential_sessions() {
+    for dir in "${SEARCH_PATHS[@]}"; do
+        if [[ -d "$dir" ]]; then
+            # Output the directory itself
+            echo "$dir"
+            # Output immediate subdirectories (1 level deep)
+            find "$dir" -mindepth 1 -maxdepth 1 -type d
         fi
     done
+}
 
-    # 4. Run fzf
-    selected=$( {
-        printf "$search_list"
-        # Only run find if we actually found existing folders
-        if [[ -n "$existing_folders" ]]; then
-            find $existing_folders -mindepth 1 -maxdepth 1 -type d
-        fi
-    } | fzf )
-fi
+# Create a clean tmux session name from a file path
+# Replaces dots and colons with underscores to satisfy tmux naming rules
+get_session_name() {
+    local path=$1
+    basename "$path" | tr . _ | tr : _
+}
 
-# 5. Exit if user cancelled fzf (ESC)
-if [[ -z $selected ]]; then
-    exit 0
-fi
+# Core logic to either switch (if inside tmux) or attach (if outside)
+switch_to_session() {
+    local name=$1
+    local path=$2
 
-# 6. Create a session name (basename of the directory)
-selected_name=$(basename "$selected" | tr . _)
+    # Create session if it doesn't exist (detached)
+    if ! tmux has-session -t="$name" 2>/dev/null; then
+        tmux new-session -ds "$name" -c "$path"
+    fi
 
-# 7. Create the session if it doesn't exist (running in background -d)
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c "$selected"
-fi
+    # Switch or Attach
+    if [[ -z $TMUX ]]; then
+        tmux attach-session -t "$name"
+    else
+        tmux switch-client -t "$name"
+    fi
+}
 
-# 8. THE CRITICAL FIX: Attach if outside, Switch if inside
-if [[ -z $TMUX ]]; then
-    # We are in a normal terminal -> Attach
-    tmux attach-session -t $selected_name
-else
-    # We are already in tmux -> Switch
-    tmux switch-client -t $selected_name
-fi
+# --- Main Logic ---
+
+main() {
+    local selected
+
+    # 1. Determine target directory
+    if [[ $# -eq 1 ]]; then
+        selected=$1
+    else
+        selected=$(list_potential_sessions | fzf)
+    fi
+
+    # 2. Safety check: Exit if no selection made (e.g., pressed ESC in fzf)
+    if [[ -z "$selected" ]]; then
+        exit 0
+    fi
+
+    # 3. Process session
+    local session_name
+    session_name=$(get_session_name "$selected")
+
+    switch_to_session "$session_name" "$selected"
+}
+
+# Run the script
+main "$@"
