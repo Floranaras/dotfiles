@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+
+################################################################################
+# FILE CONVERTER - v1.2.1 (Mac/Homebrew Patch)
+################################################################################
+set -euo pipefail
+
+# --- Colors ---
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# --- Helper Functions ---
+die() { echo -e "${RED}✖ Error: $1${NC}" >&2; exit 1; }
+info() { echo -e "${BLUE}➜ $1${NC}"; }
+success() { echo -e "${GREEN}✔ $1${NC}"; }
+
+# Detect LibreOffice/Soffice
+get_libre_cmd() {
+    if command -v libreoffice &>/dev/null; then
+        echo "libreoffice"
+    elif command -v soffice &>/dev/null; then
+        echo "soffice"
+    else
+        echo ""
+    fi
+}
+
+check_deps() {
+    for tool in ffmpeg ffprobe bc; do
+        command -v "$tool" &>/dev/null || die "$tool is not installed. Run: brew install $tool"
+    done
+}
+
+# --- Initialization ---
+check_deps
+[[ $# -eq 0 || "$1" == "-h" || "$1" == "--help" ]] && { echo "Usage: fconv <input> <output_format>"; exit 0; }
+
+INPUT="$1"; shift
+[[ -f "$INPUT" ]] || die "File '$INPUT' not found."
+
+FILENAME=$(basename -- "$INPUT")
+NAME="${FILENAME%.*}"
+INPUT_EXT="${FILENAME##*.}"
+
+# Defaults
+AUDIO_BITRATE=128
+DISCORD_MODE=false
+TARGET_SIZE=10
+OUTPUT_FILE=""
+OUTPUT_FORMAT=""
+
+# --- Argument Parsing ---
+if [[ $# -gt 0 && ! "$1" =~ ^- ]]; then
+    if [[ "$1" == *.* ]]; then
+        OUTPUT_FILE="$1"
+        OUTPUT_FORMAT="${1##*.}"
+    else
+        OUTPUT_FORMAT="$1"
+    fi
+    shift
+fi
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -d|--discord) DISCORD_MODE=true ;;
+        -s|--size)    TARGET_SIZE="$2"; shift ;;
+        -o|--output)  OUTPUT_FILE="$2"; OUTPUT_FORMAT="${2##*.}"; shift ;;
+        *) shift ;;
+    esac
+    shift
+done
+
+OUTPUT_FORMAT="${OUTPUT_FORMAT:-$INPUT_EXT}"
+FMT_LOWER=$(echo "$OUTPUT_FORMAT" | tr '[:upper:]' '[:lower:]')
+
+if [[ -z "$OUTPUT_FILE" ]]; then
+    OUTPUT_FILE="${NAME}.${FMT_LOWER}"
+fi
+
+# Safety: Avoid overwriting input (Mac-safe realpath check)
+IN_REAL=$(cd "$(dirname "$INPUT")" && pwd)/$(basename "$INPUT")
+OUT_DIR=$(dirname "$OUTPUT_FILE")
+mkdir -p "$OUT_DIR"
+OUT_REAL=$(cd "$OUT_DIR" && pwd)/$(basename "$OUTPUT_FILE")
+
+if [[ "$IN_REAL" == "$OUT_REAL" ]]; then
+    OUTPUT_FILE="${NAME}_converted.${FMT_LOWER}"
+fi
+
+# --- Engines ---
+
+handle_video() {
+    info "Converting Video..."
+    ffmpeg -i "$INPUT" -y -hide_banner -loglevel warning -c:v libx264 -crf 23 -c:a aac -b:a "${AUDIO_BITRATE}k" "$OUTPUT_FILE"
+}
+
+handle_audio() {
+    info "Converting Audio..."
+    local codec="libmp3lame"
+    [[ "$FMT_LOWER" == "wav" ]] && codec="pcm_s16le"
+    ffmpeg -i "$INPUT" -y -hide_banner -loglevel error -c:a "$codec" "$OUTPUT_FILE"
+}
+
+handle_image() {
+    info "Converting Image..."
+    ffmpeg -i "$INPUT" -y -hide_banner -loglevel error "$OUTPUT_FILE"
+}
+
+handle_document() {
+    local cmd
+    cmd=$(get_libre_cmd)
+    [[ -z "$cmd" ]] && die "LibreOffice/soffice not found. Please restart your terminal or check /Applications."
+    
+    info "Converting Document via $cmd..."
+    "$cmd" --headless --convert-to "$FMT_LOWER" "$INPUT" --outdir "$(dirname "$OUTPUT_FILE")"
+    
+    # LibreOffice creates files with the same base name as input
+    local gen_file="$(dirname "$OUTPUT_FILE")/${NAME}.${FMT_LOWER}"
+    if [[ "$OUT_REAL" != "$(cd "$(dirname "$gen_file")" && pwd)/$(basename "$gen_file")" && -f "$gen_file" ]]; then
+        mv "$gen_file" "$OUTPUT_FILE"
+    fi
+}
+
+# --- Execution ---
+info "Converting: $INPUT ➜ $OUTPUT_FILE"
+
+case "$FMT_LOWER" in
+    mp4|mkv|mov|webm)           handle_video ;;
+    mp3|wav|ogg|m4a)            handle_audio ;;
+    png|jpg|jpeg|webp)          handle_image ;;
+    pdf|docx|doc|ppt|pptx|odt)  handle_document ;;
+    *) die "Unsupported format: $OUTPUT_FORMAT" ;;
+esac
+
+if [[ -f "$OUTPUT_FILE" ]]; then
+    success "Success: $OUTPUT_FILE ($(du -h "$OUTPUT_FILE" | cut -f1))"
+else
+    die "Conversion failed."
+fi
