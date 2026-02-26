@@ -37,7 +37,7 @@ Install required packages for your OS:
 - [Installation Guide](docs/INSTALLATION.md) - OS-specific prerequisites
 - [Neovim Setup](docs/NEOVIM.md) - Features, keybindings, plugins
 - [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and fixes
-
+- [File Management Util](docs/FCONV.md) - Converter and compression script
 ## Updating
 
 ```bash
