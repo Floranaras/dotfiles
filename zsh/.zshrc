@@ -76,6 +76,12 @@ alias grun="./gradlew run -q --console=plain"
 alias report="open build/reports/tests/test/index.html"
 alias jqinit='npm init -y && npm install --save-dev @types/jquery'
 
+# Download best quality MP3
+alias ytdl-mp3="yt-dlp -x --audio-format mp3 --audio-quality 0"
+
+# Download best quality MP4 (Highly compatible)
+alias ytdl-mp4="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'"
+
 # --- 6. Custom Functions ------------------------------------------------------
 
 # Initialize a Java Gradle project
@@ -98,3 +104,4 @@ ginit() {
 if [[ "$OSTYPE" == "darwin"* ]]; then
     [[ -f "/usr/local/bin/organize-downloads.sh" ]] && /usr/local/bin/organize-downloads.sh &!
 fi
+
