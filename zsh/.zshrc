@@ -82,6 +82,11 @@ alias ytdl-mp3="yt-dlp -x --audio-format mp3 --audio-quality 0"
 # Download best quality MP4 (Highly compatible)
 alias ytdl-mp4="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'"
 
+# Git Alias
+alias g='git'
+compdef g=git
+compdef _git git-purge=git-branch
+
 # --- 6. Custom Functions ------------------------------------------------------
 
 # Initialize a Java Gradle project
