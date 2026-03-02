@@ -25,7 +25,7 @@ vim.opt.termguicolors = true
 vim.opt.cursorline = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
-vim.opt.colorcolumn = "80"
+vim.opt.colorcolumn = "100"
 
 -- Cursor behavior for file paths
 vim.opt.isfname:append("@-@")
