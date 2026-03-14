@@ -5,7 +5,7 @@
 
 --- Apply a colorscheme and force transparency on floating windows and buffers.
 -- @param color string|nil The colorscheme name (defaults to "rose-pine").
-function ColorMyPencils(color)
+local function ColorMyPencils(color)
   color = color or "rose-pine"
   vim.cmd.colorscheme(color)
 
@@ -17,12 +17,9 @@ function ColorMyPencils(color)
 end
 
 return {
-  -- ===========================================================================
   -- 1. TOKYONIGHT CONFIGURATION
-  -- ===========================================================================
   {
     "folke/tokyonight.nvim",
-    --- @brief Configures TokyoNight with a dark "Storm" aesthetic.
     config = function()
       require("tokyonight").setup({
         style = "storm",
@@ -38,9 +35,7 @@ return {
     end,
   },
 
-  -- ===========================================================================
   -- 2. ROSE-PINE CONFIGURATION (PRIMARY THEME)
-  -- ===========================================================================
   {
     "rose-pine/neovim",
     name = "rose-pine",

@@ -3,11 +3,7 @@
 --- This script ensures that the `lazy.nvim` plugin manager is installed,
 --- configures basic editor options, and initializes the plugin system.
 
--- =============================================================================
 -- 1. BOOTSTRAP PLUGIN MANAGER (lazy.nvim)
--- =============================================================================
-
---- Path where the plugin manager will be installed.
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 --- Check if lazy.nvim is already installed; if not, clone it from GitHub.
@@ -39,10 +35,8 @@ end
 -- Prepend the newly installed manager to the runtime path.
 vim.opt.rtp:prepend(lazypath)
 
--- =============================================================================
 -- 2. GLOBAL EDITOR OPTIONS & MAPPINGS
--- =============================================================================
-
+--
 -- Enable 24-bit RGB colors in the TUI.
 vim.opt.termguicolors = true
 
@@ -51,9 +45,7 @@ vim.opt.termguicolors = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- =============================================================================
 -- 3. PLUGIN SETUP
--- =============================================================================
 
 --- Initialize the plugin manager with custom specifications.
 -- @param spec A table containing the plugins to import or define.

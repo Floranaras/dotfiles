@@ -10,9 +10,7 @@ return {
     local mark = require("harpoon.mark")
     local ui = require("harpoon.ui")
 
-    -- =========================================================================
     -- 1. MARKING & UI
-    -- =========================================================================
 
     -- Mark the current file for the Harpoon list.
     vim.keymap.set("n", "<leader>a", mark.add_file)
@@ -20,9 +18,7 @@ return {
     -- Toggle the visual menu to view and manage marked files.
     vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
 
-    -- =========================================================================
     -- 2. FAST NAVIGATION
-    -- =========================================================================
 
     -- Navigate directly to specific marks (1 through 4).
     vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)

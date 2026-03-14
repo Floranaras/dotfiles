@@ -18,9 +18,7 @@ return {
       -- Initialize the debugging UI
       dapui.setup()
 
-      -- =======================================================================
       -- 1. UI AUTOMATION
-      -- =======================================================================
 
       -- Automatically open/close DAP UI when sessions start or end.
       dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -33,10 +31,7 @@ return {
         dapui.close()
       end
 
-      -- =======================================================================
       -- 2. KEYBINDINGS
-      -- =======================================================================
-
       vim.keymap.set("n", "<F5>", dap.continue)
       vim.keymap.set("n", "<F10>", dap.step_over)
       vim.keymap.set("n", "<F11>", dap.step_into)
@@ -48,9 +43,7 @@ return {
         dap.set_breakpoint(vim.fn.input("Condition: "))
       end)
 
-      -- =======================================================================
       -- 3. VISUALS (SIGNS)
-      -- =======================================================================
 
       vim.fn.sign_define("DapBreakpoint", {
         text = "●",
@@ -61,9 +54,7 @@ return {
         texthl = "String",
       })
 
-      -- =======================================================================
       -- 4. ADAPTER: C / C++ (codelldb)
-      -- =======================================================================
 
       local codelldb_path = vim.fn.stdpath("data") .. "/mason/bin/codelldb"
 
@@ -96,9 +87,7 @@ return {
       -- Reuse C configuration for C++
       dap.configurations.cpp = dap.configurations.c
 
-      -- =======================================================================
       -- 5. ADAPTER: JAVASCRIPT / TYPESCRIPT (js-debug-adapter)
-      -- =======================================================================
 
       local js_path = vim.fn.stdpath("data")
         .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js"

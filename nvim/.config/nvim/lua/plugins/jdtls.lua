@@ -13,9 +13,7 @@ return {
   },
   --- @brief Initializes JDTLS when a Java file is opened.
   config = function()
-    -- =========================================================================
     -- 1. UTILITY FUNCTIONS
-    -- =========================================================================
 
     --- Detect JDTLS and Lombok paths across different installation methods.
     --- @return table|nil Paths for JDTLS binary and Lombok JAR.
@@ -80,9 +78,7 @@ return {
       return true
     end
 
-    -- =========================================================================
     -- 2. AUTOCOMMANDS & LSP SETUP
-    -- =========================================================================
 
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "java",
@@ -116,13 +112,20 @@ return {
           vim.fs.find(markers, { upward = true })[1]
         )
 
-        -- Debug adapter bundle path
+        -- FIX 5: Guard against empty debug JAR path.
+        -- vim.fn.glob returns "" when no match is found, which would
+        -- pass { "" } as bundles and cause JDTLS to error on startup.
         local mason_pkg = vim.fn.stdpath("data") .. "/mason/packages"
         local debug_path = mason_pkg .. "/java-debug-adapter/extension/server"
         local debug_jar = vim.fn.glob(
           debug_path .. "/com.microsoft.java.debug.plugin-*.jar",
           true
         )
+
+        local bundles = {}
+        if debug_jar ~= "" then
+          table.insert(bundles, debug_jar)
+        end
 
         -- JDTLS Specific Configuration
         local config = {
@@ -134,7 +137,7 @@ return {
               contentProvider = { preferred = "fernflower" },
             },
           },
-          init_options = { bundles = { debug_jar } },
+          init_options = { bundles = bundles },
           on_attach = function(_, bufnr)
             local jdtls = require("jdtls")
             jdtls.setup_dap({ hotcodereplace = "auto" })
@@ -163,9 +166,7 @@ return {
       end,
     })
 
-    -- =========================================================================
     -- 3. USER COMMANDS
-    -- =========================================================================
 
     vim.api.nvim_create_user_command("JdtlsRestart", "LspRestart", {
       desc = "Restart JDTLS",

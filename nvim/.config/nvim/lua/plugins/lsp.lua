@@ -1,19 +1,23 @@
 --- @file lsp.lua
---- @brief LSP configuration and completion engine setup.
---- This module configures language servers via lspconfig/Mason and
---- provides an integrated completion experience via nvim-cmp.
+--- @brief LSP configuration and completion engine setup for the GOTH stack + Leptos.
+
+vim.filetype.add({
+  extension = {
+    templ = "templ",
+  },
+})
 
 return {
-  -- ===========================================================================
+  { "joerdav/templ.vim" },
+
   -- 1. LSP CONFIGURATION (lspconfig)
-  -- ===========================================================================
   {
     "neovim/nvim-lspconfig",
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
     },
-    --- @brief Initializes Mason and individual Language Servers.
     config = function()
       require("mason").setup()
       require("mason-lspconfig").setup({
@@ -23,20 +27,25 @@ return {
           "tailwindcss",
           "html",
           "ts_ls",
+          "gopls",
+          "htmx",
+          "rust_analyzer",
         },
       })
 
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities(
+        vim.lsp.protocol.make_client_capabilities()
+      )
 
       -- C/C++ Configuration
       vim.lsp.config.clangd = {
         cmd = { "clangd" },
         filetypes = { "c", "cpp", "objc", "objcpp" },
-        root_markers = { ".git", "compile_commands.json" },
+        root_markers = { "compile_commands.json", "compile_flags.txt", ".git" },
         capabilities = capabilities,
       }
 
-      -- Lua Configuration (Neovim API support)
+      -- Lua Configuration
       vim.lsp.config.lua_ls = {
         cmd = { "lua-language-server" },
         filetypes = { "lua" },
@@ -53,13 +62,8 @@ return {
       vim.lsp.config.tailwindcss = {
         cmd = { "tailwindcss-language-server", "--stdio" },
         filetypes = {
-          "html",
-          "css",
-          "scss",
-          "javascript",
-          "javascriptreact",
-          "typescript",
-          "typescriptreact",
+          "html", "css", "scss", "javascript", "javascriptreact",
+          "typescript", "typescriptreact", "templ", "rust",
         },
         root_markers = {
           "tailwind.config.js",
@@ -68,18 +72,35 @@ return {
           "package.json",
         },
         capabilities = capabilities,
+        settings = {
+          tailwindCSS = {
+            includeLanguages = { rust = "html" },
+            experimental = {
+              classRegex = {
+                'class="([^"]*)"',
+                'class=([^,)]*)',
+              },
+            },
+          },
+        },
       }
 
       -- HTML Configuration
       vim.lsp.config.html = {
         cmd = { "vscode-html-language-server", "--stdio" },
-        filetypes = { "html" },
-        root_markers = { ".git", "package.json" },
+        filetypes = { "html", "templ", "rust" },
+        root_markers = { ".git", "go.mod", "package.json", "Cargo.toml" },
         capabilities = capabilities,
         init_options = {
           provideFormatter = true,
           embeddedLanguages = { css = true, javascript = true },
           configurationSection = { "html", "css", "javascript" },
+        },
+        settings = {
+          html = {
+            format = { templated = true },
+            suggest = { html5 = true },
+          },
         },
       }
 
@@ -87,26 +108,69 @@ return {
       vim.lsp.config.ts_ls = {
         cmd = { "typescript-language-server", "--stdio" },
         filetypes = {
-          "javascript",
-          "javascriptreact",
-          "typescript",
-          "typescriptreact",
+          "javascript", "javascriptreact",
+          "typescript", "typescriptreact",
         },
         root_markers = { ".git", "package.json", "tsconfig.json" },
         capabilities = capabilities,
       }
 
+      -- Go Configuration (gopls)
+      vim.lsp.config.gopls = {
+        cmd = { "gopls" },
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
+        root_markers = { "go.work", "go.mod", ".git" },
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            completeUnimported = true,
+            usePlaceholders = true,
+            analyses = { unusedparams = true },
+          },
+        },
+      }
+
+      -- HTMX Configuration
+      vim.lsp.config.htmx = {
+        cmd = { "htmx-lsp" },
+        filetypes = { "html", "templ" },
+        root_markers = { ".git" },
+        capabilities = capabilities,
+      }
+
+      -- Templ Configuration
+      vim.lsp.config.templ = {
+        cmd = { "templ", "lsp" },
+        filetypes = { "templ" },
+        root_markers = { "go.mod", ".git" },
+        capabilities = capabilities,
+      }
+
+      -- Rust Analyzer Configuration (Leptos)
+      vim.lsp.config.rust_analyzer = {
+        cmd = { "rust-analyzer" },
+        filetypes = { "rust" },
+        root_markers = { "Cargo.toml", "Cargo.lock", ".git" },
+        capabilities = capabilities,
+        settings = {
+          ["rust-analyzer"] = {
+            checkOnSave = { command = "clippy" },
+            procMacro = { enable = true },  -- critical for view! macro
+            cargo = { features = "all" },   -- enables leptos feature flags
+          },
+        },
+      }
+
       -- Enable servers
-      local servers = { "clangd", "lua_ls", "tailwindcss", "html", "ts_ls" }
+      local servers = {
+        "clangd", "lua_ls", "tailwindcss", "html",
+        "ts_ls", "gopls", "htmx", "templ", "rust_analyzer",
+      }
       for _, lsp in ipairs(servers) do
         vim.lsp.enable(lsp)
       end
 
-      -- =======================================================================
       -- 2. LSP ATTACH (Keybindings)
-      -- =======================================================================
-
-      --- Configure buffer-local mappings when an LSP attaches.
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("user_lsp_attach", { clear = true }),
         callback = function(event)
@@ -116,8 +180,10 @@ return {
           vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
           vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
           vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
-          vim.keymap.set("n", "[d", vim.diagnostic.goto_next, opts)
-          vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, opts)
+          -- FIX 1: Corrected diagnostic navigation direction.
+          -- [ = previous (up), ] = next (down) — standard Vim convention.
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
           vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
           vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
           vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
@@ -127,9 +193,7 @@ return {
     end,
   },
 
-  -- ===========================================================================
   -- 3. COMPLETION ENGINE (nvim-cmp)
-  -- ===========================================================================
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -141,7 +205,6 @@ return {
       "L3MON4D3/LuaSnip",
       "roobert/tailwindcss-colorizer-cmp.nvim",
     },
-    --- @brief Configures snippet expansion and completion sources.
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")

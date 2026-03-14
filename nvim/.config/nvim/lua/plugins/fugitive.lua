@@ -43,9 +43,7 @@ return {
       end,
     })
 
-    -- =========================================================================
     -- MERGE CONFLICT RESOLUTION
-    -- =========================================================================
 
     -- Get changes from the left (target) side during a merge conflict
     vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>")

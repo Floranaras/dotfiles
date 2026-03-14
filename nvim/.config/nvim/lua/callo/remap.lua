@@ -3,12 +3,10 @@
 --- This file defines leader-based shortcuts and overrides for common
 --- editing patterns.
 
--- Set leader key to space
-vim.g.mapleader = " "
+-- NOTE: mapleader is set in lazy.lua before plugins load.
+-- Do not set it again here.
 
--- =============================================================================
 -- 1. FILE EXPLORATION & NAVIGATION
--- =============================================================================
 
 -- Open Netrw file explorer
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
@@ -26,9 +24,7 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- =============================================================================
 -- 2. CLIPBOARD & REGISTER MANAGEMENT
--- =============================================================================
 
 --- Paste without losing the current buffer (Greatest Hit)
 vim.keymap.set("x", "<leader>p", [["_dP]])
@@ -40,9 +36,7 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 --- Delete to void register (prevents overwriting clipboard)
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
--- =============================================================================
 -- 3. LSP & UTILITIES
--- =============================================================================
 
 -- Restart LSP (useful for Zig/ZLS or stuck servers)
 vim.keymap.set("n", "<leader>zig", "<cmd>LspRestart<cr>")
@@ -66,18 +60,14 @@ vim.keymap.set(
 -- Make current file executable
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
--- =============================================================================
 -- 4. NAVIGATION: QUICKFIX & LOCATION LISTS
--- =============================================================================
 
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
--- =============================================================================
 -- 5. CUSTOM SNIPPETS & FUNCTIONS
--- =============================================================================
 
 --- Go-style error handling snippet
 vim.keymap.set(
@@ -100,9 +90,7 @@ vim.keymap.set("n", "<leader>nh", ":nohl<CR>", {
 vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
 vim.keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
 
--- =============================================================================
 -- 6. PROJECT & FILE MANAGEMENT
--- =============================================================================
 
 --- Open explorer at project root
 vim.keymap.set("n", "<leader>pr", function()
@@ -126,9 +114,7 @@ vim.keymap.set("n", "<leader>nF", function()
   end
 end, { desc = "New file from project root" })
 
--- =============================================================================
 -- 7. BUILD TOOLS & TERMINAL (GRADLE)
--- =============================================================================
 
 --- Helper for Gradle commands in a terminal split
 local function gradle_cmd(task)

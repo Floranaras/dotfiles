@@ -9,9 +9,6 @@ return {
     build = "npm install -g live-server",
     --- @brief Configures server arguments and hot-reload triggers.
     config = function()
-      -- Global settings for the live-server binary.
-      -- Note: Using Brave Browser and disabling CSS injection for 
-      -- more consistent full-page reloads.
       vim.g.live_server = {
         args = {
           "--port=8080",
@@ -20,10 +17,7 @@ return {
         },
       }
 
-      -- =======================================================================
       -- 1. KEYBINDINGS
-      -- =======================================================================
-
       vim.keymap.set("n", "<leader>ls", ":LiveServerStart<CR>", {
         desc = "Start Live Server",
       })
@@ -32,20 +26,14 @@ return {
         desc = "Stop Live Server",
       })
 
-      -- =======================================================================
       -- 2. AUTOMATION (AUTO-SAVE)
-      -- =======================================================================
-
-      --- Automatically save specific filetypes to trigger live-server reload.
-      --- This triggers on text changes or when leaving insert mode.
-      vim.api.nvim_create_autocmd(
+     vim.api.nvim_create_autocmd(
         { "TextChanged", "TextChangedI", "InsertLeave" },
         {
           pattern = {
             "*.html",
             "*.css",
             "*.js",
-            "*.rs",
           },
           callback = function()
             vim.cmd("silent! write")

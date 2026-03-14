@@ -3,10 +3,10 @@
 --- This file handles indentation, search behavior, undo persistence,
 --- and language-specific buffer settings via autocommands.
 
--- =============================================================================
--- 1. IDENTATION & TABULATION
--- =============================================================================
+-- NOTE: mapleader is set in lazy.lua before plugins load.
+-- Do not set it again here.
 
+-- 1. IDENTATION & TABULATION
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -14,10 +14,7 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
 
--- =============================================================================
 -- 2. UI & APPEARANCE
--- =============================================================================
-
 vim.opt.guicursor = ""
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -30,32 +27,26 @@ vim.opt.colorcolumn = "100"
 -- Cursor behavior for file paths
 vim.opt.isfname:append("@-@")
 
--- =============================================================================
 -- 3. SEARCH BEHAVIOR
--- =============================================================================
-
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
--- =============================================================================
 -- 4. UNDO & BACKUP PERSISTENCE
--- =============================================================================
-
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undofile = true
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 
--- =============================================================================
 -- 5. SYSTEM & INTERACTION
--- =============================================================================
-
 vim.opt.updatetime = 50
 vim.opt.shell = "/bin/bash"
-vim.g.mapleader = " "
-vim.opt.clipboard = "unnamedplus"
+
+-- NOTE: clipboard is NOT set to "unnamedplus" here.
+-- Use <leader>y / <leader>Y from remap.lua to explicitly yank to
+-- the system clipboard. This keeps the default register separate
+-- for internal paste/delete operations.
 
 -- Configure backspace to behave like other editors
 vim.opt.backspace = "indent,eol,start"
@@ -64,10 +55,8 @@ vim.opt.backspace = "indent,eol,start"
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- =============================================================================
 -- 6. DIAGNOSTICS CONFIGURATION
--- =============================================================================
-
+--
 --- Define how LSP diagnostics are displayed in the UI.
 vim.diagnostic.config({
   virtual_text = {
@@ -93,10 +82,8 @@ vim.diagnostic.config({
   },
 })
 
--- =============================================================================
 -- 7. AUTOCOMMANDS (LANGUAGE SPECIFIC)
--- =============================================================================
-
+--
 --- Web Development: Set indentation to 2 spaces.
 vim.api.nvim_create_autocmd("FileType", {
   pattern = {
@@ -109,6 +96,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "json",
     "jsx",
     "tsx",
+    "lua",
   },
   callback = function()
     vim.opt_local.tabstop = 2
