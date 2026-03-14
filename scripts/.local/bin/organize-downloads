@@ -1,0 +1,29 @@
+#!/bin/bash
+
+DOWNLOADS_DIR="$HOME/Downloads"
+
+organize_files() {
+    find "$DOWNLOADS_DIR" -maxdepth 1 -type f | while read -r file; do
+        filename=$(basename "$file")
+        
+        if [[ "$filename" == .* ]]; then
+            continue
+        fi
+        
+        if [[ "$filename" == *.* ]]; then
+            extension="${filename##*.}"
+            extension=$(echo "$extension" | tr '[:upper:]' '[:lower:]')
+        else
+            extension="no_extension"
+        fi
+        
+        target_dir="$DOWNLOADS_DIR/$extension"
+        if [[ ! -d "$target_dir" ]]; then
+            mkdir -p "$target_dir"
+        fi
+        
+        mv "$file" "$target_dir/"
+    done
+}
+
+organize_files
