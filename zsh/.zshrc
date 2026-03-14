@@ -110,3 +110,4 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     [[ -f "/usr/local/bin/organize-downloads.sh" ]] && /usr/local/bin/organize-downloads.sh &!
 fi
 
+export PATH=$PATH:$(go env GOPATH)/bin
