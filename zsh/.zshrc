@@ -108,6 +108,7 @@ ginit() {
 # Added '&!' to run in background (disowned) to prevent slow terminal startup.
 if [[ "$OSTYPE" == "darwin"* ]]; then
     [[ -f "/usr/local/bin/organize-downloads.sh" ]] && /usr/local/bin/organize-downloads.sh &!
+    cleanup-dsstore &!
 fi
 
 export PATH=$PATH:$(go env GOPATH)/bin
