@@ -42,11 +42,7 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 -- 5. SYSTEM & INTERACTION
 vim.opt.updatetime = 50
 vim.opt.shell = "/bin/bash"
-
--- NOTE: clipboard is NOT set to "unnamedplus" here.
--- Use <leader>y / <leader>Y from remap.lua to explicitly yank to
--- the system clipboard. This keeps the default register separate
--- for internal paste/delete operations.
+vim.opt.clipboard = "unnamedplus"
 
 -- Configure backspace to behave like other editors
 vim.opt.backspace = "indent,eol,start"
