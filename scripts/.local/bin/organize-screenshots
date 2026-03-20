@@ -1,0 +1,16 @@
+#!/bin/bash
+
+SCREENSHOTS_DIR="$HOME/Pictures/Screenshots"
+
+mkdir -p "$SCREENSHOTS_DIR/screenshots"
+mkdir -p "$SCREENSHOTS_DIR/recordings"
+mkdir -p "$SCREENSHOTS_DIR/other"
+
+find "$SCREENSHOTS_DIR" -maxdepth 1 -name 'Screenshot*.png' -exec mv {} "$SCREENSHOTS_DIR/screenshots/" \;
+
+find "$SCREENSHOTS_DIR" -maxdepth 1 -name 'Screen Recording*.mov' -exec mv {} "$SCREENSHOTS_DIR/recordings/" \;
+
+find "$SCREENSHOTS_DIR" -maxdepth 1 -type f \
+    ! -name 'Screenshot*.png' \
+    ! -name 'Screen Recording*.mov' \
+    -exec mv {} "$SCREENSHOTS_DIR/other/" \;

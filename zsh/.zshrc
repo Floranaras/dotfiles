@@ -109,6 +109,7 @@ ginit() {
 if [[ "$OSTYPE" == "darwin"* ]]; then
     [[ -f "/usr/local/bin/organize-downloads.sh" ]] && /usr/local/bin/organize-downloads.sh &!
     cleanup-dsstore &!
+    organize-screenshots &!
 fi
 
 export PATH=$PATH:$(go env GOPATH)/bin
