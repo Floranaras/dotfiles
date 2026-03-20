@@ -5,7 +5,7 @@ font-size = 14
 theme = Rose Pine 
 foreground = #ffffff
 background = #121212
-background-opacity = 100
+background-opacity = 0.95
 background-blur = 8
 # window settings
 window-padding-x = 10
