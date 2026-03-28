@@ -10,7 +10,7 @@ vim.filetype.add({
 return {
   { "joerdav/templ.vim" },
 
-  -- 1. LSP CONFIGURATION (lspconfig)
+  -- 1. LSP CONFIGURATION (Using Neovim 0.11+ built-in APIs)
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -38,7 +38,7 @@ return {
       )
 
       -- C/C++ Configuration
-      vim.lsp.config.clangd = {
+      vim.lsp.config["clangd"] = {
         cmd = { "clangd" },
         filetypes = { "c", "cpp", "objc", "objcpp" },
         root_markers = { "compile_commands.json", "compile_flags.txt", ".git" },
@@ -46,7 +46,7 @@ return {
       }
 
       -- Lua Configuration
-      vim.lsp.config.lua_ls = {
+      vim.lsp.config["lua_ls"] = {
         cmd = { "lua-language-server" },
         filetypes = { "lua" },
         root_markers = { ".git" },
@@ -59,7 +59,7 @@ return {
       }
 
       -- Tailwind CSS Configuration
-      vim.lsp.config.tailwindcss = {
+      vim.lsp.config["tailwindcss"] = {
         cmd = { "tailwindcss-language-server", "--stdio" },
         filetypes = {
           "html", "css", "scss", "javascript", "javascriptreact",
@@ -86,7 +86,7 @@ return {
       }
 
       -- HTML Configuration
-      vim.lsp.config.html = {
+      vim.lsp.config["html"] = {
         cmd = { "vscode-html-language-server", "--stdio" },
         filetypes = { "html", "templ", "rust" },
         root_markers = { ".git", "go.mod", "package.json", "Cargo.toml" },
@@ -105,7 +105,7 @@ return {
       }
 
       -- TypeScript / JavaScript Configuration
-      vim.lsp.config.ts_ls = {
+      vim.lsp.config["ts_ls"] = {
         cmd = { "typescript-language-server", "--stdio" },
         filetypes = {
           "javascript", "javascriptreact",
@@ -116,7 +116,7 @@ return {
       }
 
       -- Go Configuration (gopls)
-      vim.lsp.config.gopls = {
+      vim.lsp.config["gopls"] = {
         cmd = { "gopls" },
         filetypes = { "go", "gomod", "gowork", "gotmpl" },
         root_markers = { "go.work", "go.mod", ".git" },
@@ -131,7 +131,7 @@ return {
       }
 
       -- HTMX Configuration
-      vim.lsp.config.htmx = {
+      vim.lsp.config["htmx"] = {
         cmd = { "htmx-lsp" },
         filetypes = { "html", "templ" },
         root_markers = { ".git" },
@@ -139,7 +139,7 @@ return {
       }
 
       -- Templ Configuration
-      vim.lsp.config.templ = {
+      vim.lsp.config["templ"] = {
         cmd = { "templ", "lsp" },
         filetypes = { "templ" },
         root_markers = { "go.mod", ".git" },
@@ -147,21 +147,25 @@ return {
       }
 
       -- Rust Analyzer Configuration (Leptos)
-      vim.lsp.config.rust_analyzer = {
+      vim.lsp.config["rust_analyzer"] = {
         cmd = { "rust-analyzer" },
         filetypes = { "rust" },
         root_markers = { "Cargo.toml", "Cargo.lock", ".git" },
         capabilities = capabilities,
         settings = {
           ["rust-analyzer"] = {
-            checkOnSave = { command = "clippy" },
+            -- Fix: checkOnSave is now a boolean, details move to 'check'
+            check = {
+              command = "clippy",
+            },
+            checkOnSave = true,
             procMacro = { enable = true },  -- critical for view! macro
             cargo = { features = "all" },   -- enables leptos feature flags
           },
         },
       }
 
-      -- Enable servers
+      -- Enable all servers using the new vim.lsp.enable API
       local servers = {
         "clangd", "lua_ls", "tailwindcss", "html",
         "ts_ls", "gopls", "htmx", "templ", "rust_analyzer",
@@ -180,8 +184,6 @@ return {
           vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
           vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
           vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
-          -- FIX 1: Corrected diagnostic navigation direction.
-          -- [ = previous (up), ] = next (down) — standard Vim convention.
           vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
           vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
           vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
