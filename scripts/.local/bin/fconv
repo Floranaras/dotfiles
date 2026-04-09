@@ -129,7 +129,15 @@ handle_audio() {
 }
 
 handle_image() {
-    ffmpeg -i "$INPUT" -y -hide_banner -loglevel error "$OUTPUT_FILE"
+    local cmd=(ffmpeg -i "$INPUT" -y -hide_banner -loglevel error)
+    
+    # Explicitly specify the libwebp encoder for WebP files
+    if [[ "$FMT_LOWER" == "webp" ]]; then
+        cmd+=(-c:v libwebp)
+    fi
+    
+    cmd+=("$OUTPUT_FILE")
+    "${cmd[@]}"
 }
 
 handle_document() {
