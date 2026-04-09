@@ -14,6 +14,8 @@ SEARCH_PATHS=(
     "$HOME/Codes"
     "$HOME/Documents/college"
     "$HOME/Downloads"
+    "$HOME/Pictures/Screenshots/recordings/"
+    "$HOME/Pictures/Screenshots/screenshots/"
 )
 
 # --- Functions ---
