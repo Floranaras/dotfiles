@@ -30,6 +30,7 @@ return {
           "gopls",
           "htmx",
           "rust_analyzer",
+          "svelte",
         },
       })
 
@@ -110,9 +111,37 @@ return {
         filetypes = {
           "javascript", "javascriptreact",
           "typescript", "typescriptreact",
+          "svelte",
         },
         root_markers = { ".git", "package.json", "tsconfig.json" },
         capabilities = capabilities,
+      }
+
+      vim.lsp.config["svelte"] = {
+        cmd = { "svelteserver", "--stdio" },
+        filetypes = { "svelte" },
+        root_markers = { "svelte.config.js", "package.json", ".git" },
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePost", {
+            pattern = { "*.ts", "*.js" },
+            callback = function(ctx)
+              client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+            end,
+          })
+        end,
+        settings = {
+          typescript = {
+            inlayHints = {
+              parameterNames = { enabled = "literals" },
+              parameterTypes = { enabled = true },
+              variableTypes = { enabled = true },
+              propertyDeclarationTypes = { enabled = true },
+              functionLikeReturnTypes = { enabled = true },
+              enumMemberValues = { enabled = true },
+            },
+          },
+        },
       }
 
       -- Go Configuration (gopls)
@@ -169,6 +198,7 @@ return {
       local servers = {
         "clangd", "lua_ls", "tailwindcss", "html",
         "ts_ls", "gopls", "htmx", "templ", "rust_analyzer",
+        "svelte",
       }
       for _, lsp in ipairs(servers) do
         vim.lsp.enable(lsp)

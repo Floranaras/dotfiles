@@ -39,6 +39,7 @@ return {
       "markdown",
       "markdown_inline",
       "glimmer",
+      "svelte"
     }
 
     -- Install parsers asynchronously (no-op if already installed).

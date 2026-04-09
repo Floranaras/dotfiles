@@ -11,7 +11,7 @@ return {
     config = function()
       vim.g.live_server = {
         args = {
-          "--port=8080",
+          "--port=6767",
           "--no-css-inject",
           "--browser=brave browser",
         },

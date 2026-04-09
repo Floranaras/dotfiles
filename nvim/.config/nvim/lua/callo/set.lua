@@ -93,6 +93,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "jsx",
     "tsx",
     "lua",
+    "svelte",
   },
   callback = function()
     vim.opt_local.tabstop = 2
