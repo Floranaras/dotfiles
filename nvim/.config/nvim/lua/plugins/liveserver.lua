@@ -9,12 +9,12 @@ return {
     build = "npm install -g live-server",
     --- @brief Configures server arguments and hot-reload triggers.
     config = function()
+      -- Configuration via vim.g.live_server using the new flat key format.
+      -- See :help live-server-config for the full list of options.
       vim.g.live_server = {
-        args = {
-          "--port=6767",
-          "--no-css-inject",
-          "--browser=brave browser",
-        },
+        port = 6767,
+        no_css_inject = true,
+        browser = "brave browser",
       }
 
       -- 1. KEYBINDINGS
@@ -27,7 +27,10 @@ return {
       })
 
       -- 2. AUTOMATION (AUTO-SAVE)
-     vim.api.nvim_create_autocmd(
+      -- NOTE: On Linux, live-server only watches the root directory
+      -- (no recursive inotify support). Auto-save still ensures the
+      -- file on disk is always current when you switch buffers.
+      vim.api.nvim_create_autocmd(
         { "TextChanged", "TextChangedI", "InsertLeave" },
         {
           pattern = {
