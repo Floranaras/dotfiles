@@ -6,6 +6,13 @@
 -- NOTE: mapleader is set in lazy.lua before plugins load.
 -- Do not set it again here.
 
+-- 0. DISABLE UNUSED PROVIDERS
+-- Silences checkhealth warnings for providers we don't use.
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_node_provider    = 0
+vim.g.loaded_perl_provider    = 0
+vim.g.loaded_ruby_provider    = 0
+
 -- 1. IDENTATION & TABULATION
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
