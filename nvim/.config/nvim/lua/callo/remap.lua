@@ -1,138 +1,77 @@
---- @file remap.lua
---- @brief Custom keybindings for Neovim navigation and productivity.
---- This file defines leader-based shortcuts and overrides for common
---- editing patterns.
-
--- NOTE: mapleader is set in lazy.lua before plugins load.
--- Do not set it again here.
-
--- 1. FILE EXPLORATION & NAVIGATION
-
--- Open Netrw file explorer
+-- Navigation
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
---- Move selected lines up/down in visual mode with auto-indenting
+-- Move selected lines up/down in visual mode
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
---- Join lines while keeping the cursor at the start
+-- Join lines while keeping cursor position
 vim.keymap.set("n", "J", "mzJ`z")
 
---- Scrolling and searching while keeping the cursor centered
+-- Keep cursor centered while scrolling and searching
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set("n", "n",     "nzzzv")
+vim.keymap.set("n", "N",     "Nzzzv")
 
--- 2. CLIPBOARD & REGISTER MANAGEMENT
+-- Clipboard
+vim.keymap.set("x", "<leader>p",           [["_dP]])
+vim.keymap.set({ "n", "v" }, "<leader>y",  [["+y]])
+vim.keymap.set("n", "<leader>Y",           [["+Y]])
+vim.keymap.set({ "n", "v" }, "<leader>d",  [["_d]])
 
---- Paste without losing the current buffer (Greatest Hit)
-vim.keymap.set("x", "<leader>p", [["_dP]])
-
---- Yank to system clipboard (+ register)
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
-vim.keymap.set("n", "<leader>Y", [["+Y]])
-
---- Delete to void register (prevents overwriting clipboard)
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
-
--- 3. LSP & UTILITIES
-
--- Restart LSP (useful for Zig/ZLS or stuck servers)
+-- LSP utilities
 vim.keymap.set("n", "<leader>zig", "<cmd>LspRestart<cr>")
+vim.keymap.set("n", "<leader>f",   vim.lsp.buf.format)
 
--- Format current buffer via LSP
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
-
--- Escape insert mode with Ctrl-C
+-- Misc
 vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set("n", "Q",     "<nop>")
+vim.keymap.set("n", "<leader>s",  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>x",  "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>nh", ":nohl<CR>",             { desc = "Clear search highlights" })
+vim.keymap.set("n", "<leader>+",  "<C-a>",                 { desc = "Increment number" })
+vim.keymap.set("n", "<leader>-",  "<C-x>",                 { desc = "Decrement number" })
 
--- Disable Ex-mode
-vim.keymap.set("n", "Q", "<nop>")
+-- Quickfix / location list
+vim.keymap.set("n", "<C-k>",      "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-j>",      "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>k",  "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>j",  "<cmd>lprev<CR>zz")
 
--- Search and replace the word currently under the cursor
-vim.keymap.set(
-  "n",
-  "<leader>s",
-  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]
-)
+-- Go-style error handling snippet
+vim.keymap.set("n", "<leader>ee", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>")
 
--- Make current file executable
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+-- Source config
+vim.keymap.set("n", "<leader><leader>", function() vim.cmd("so") end)
 
--- 4. NAVIGATION: QUICKFIX & LOCATION LISTS
-
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
-
--- 5. CUSTOM SNIPPETS & FUNCTIONS
-
---- Go-style error handling snippet
-vim.keymap.set(
-  "n",
-  "<leader>ee",
-  "oif err != nil {<CR>}<Esc>Oreturn err<Esc>"
-)
-
---- Reload configuration (Source)
-vim.keymap.set("n", "<leader><leader>", function()
-  vim.cmd("so")
-end)
-
--- Clear search highlights
-vim.keymap.set("n", "<leader>nh", ":nohl<CR>", {
-  desc = "Clear search highlights",
-})
-
--- Math operations
-vim.keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" })
-vim.keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" })
-
--- 6. PROJECT & FILE MANAGEMENT
-
---- Open explorer at project root
+-- Explorer
 vim.keymap.set("n", "<leader>pr", function()
   vim.cmd("Explore " .. vim.fn.getcwd())
 end, { desc = "Project root explorer" })
 
---- Create new file relative to current directory
+-- fnameescape prevents path injection when user input is passed to :edit
 vim.keymap.set("n", "<leader>nf", function()
-  local filename = vim.fn.input("New file (relative to current): ")
-  if filename ~= "" then
-    local current_dir = vim.fn.expand("%:p:h")
-    vim.cmd("e " .. current_dir .. "/" .. filename)
-  end
+  local name = vim.fn.input("New file (relative to current): ")
+  if name == "" then return end
+  vim.cmd.edit(vim.fn.fnameescape(vim.fn.expand("%:p:h") .. "/" .. name))
 end, { desc = "New file in current dir" })
 
---- Create new file relative to project root
 vim.keymap.set("n", "<leader>nF", function()
-  local filename = vim.fn.input("New file (from root): ")
-  if filename ~= "" then
-    vim.cmd("e " .. vim.fn.getcwd() .. "/" .. filename)
-  end
+  local name = vim.fn.input("New file (from root): ")
+  if name == "" then return end
+  vim.cmd.edit(vim.fn.fnameescape(vim.fn.getcwd() .. "/" .. name))
 end, { desc = "New file from project root" })
 
--- 7. BUILD TOOLS & TERMINAL (GRADLE)
-
---- Helper for Gradle commands in a terminal split
+-- shellescape handles project paths that contain spaces
 local function gradle_cmd(task)
-  local cmd = "below terminal cd "..vim.fn.getcwd().." && ./gradlew " .. task
-  vim.cmd(cmd)
+  vim.cmd("below terminal cd " .. vim.fn.shellescape(vim.fn.getcwd()) .. " && ./gradlew " .. task)
 end
 
-vim.keymap.set("n", "<leader>gr", function() gradle_cmd("run") end, {
-  desc = "Gradle run",
-})
-vim.keymap.set("n", "<leader>gb", function() gradle_cmd("build") end, {
-  desc = "Gradle build",
-})
-vim.keymap.set("n", "<leader>gt", function() gradle_cmd("test") end, {
-  desc = "Gradle test",
-})
+vim.keymap.set("n", "<leader>gr", function() gradle_cmd("run") end,   { desc = "Gradle run" })
+vim.keymap.set("n", "<leader>gb", function() gradle_cmd("build") end, { desc = "Gradle build" })
+vim.keymap.set("n", "<leader>gt", function() gradle_cmd("test") end,  { desc = "Gradle test" })
 
---- Open terminal split at project root
 vim.keymap.set("n", "<leader>tt", function()
   vim.cmd("below terminal")
   vim.cmd("startinsert")
