@@ -1,48 +1,21 @@
---- @file live-server.lua
---- @brief Live preview server configuration for web development.
---- This module integrates live-server with Neovim, featuring
---- custom browser settings and automated saving for hot-reloading.
-
 return {
-  {
-    "barrett-ruth/live-server.nvim",
-    build = "npm install -g live-server",
-    --- @brief Configures server arguments and hot-reload triggers.
-    config = function()
-      -- Configuration via vim.g.live_server using the new flat key format.
-      -- See :help live-server-config for the full list of options.
-      vim.g.live_server = {
-        port = 6767,
-        no_css_inject = true,
-        browser = "brave browser",
-      }
+  "barrett-ruth/live-server.nvim",
+  build = "npm install -g live-server",
+  config = function()
+    vim.g.live_server = {
+      port          = 6767,
+      no_css_inject = true,
+      browser       = "brave browser",
+    }
 
-      -- 1. KEYBINDINGS
-      vim.keymap.set("n", "<leader>ls", ":LiveServerStart<CR>", {
-        desc = "Start Live Server",
-      })
+    vim.keymap.set("n", "<leader>ls", ":LiveServerStart<CR>", { desc = "Start Live Server" })
+    vim.keymap.set("n", "<leader>lc", ":LiveServerStop<CR>",  { desc = "Stop Live Server" })
 
-      vim.keymap.set("n", "<leader>lc", ":LiveServerStop<CR>", {
-        desc = "Stop Live Server",
-      })
-
-      -- 2. AUTOMATION (AUTO-SAVE)
-      -- NOTE: On Linux, live-server only watches the root directory
-      -- (no recursive inotify support). Auto-save still ensures the
-      -- file on disk is always current when you switch buffers.
-      vim.api.nvim_create_autocmd(
-        { "TextChanged", "TextChangedI", "InsertLeave" },
-        {
-          pattern = {
-            "*.html",
-            "*.css",
-            "*.js",
-          },
-          callback = function()
-            vim.cmd("silent! write")
-          end,
-        }
-      )
-    end,
-  },
+    -- Auto-save ensures the file on disk is current when switching buffers;
+    -- live-server picks up the write and hot-reloads the browser
+    vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "InsertLeave" }, {
+      pattern  = { "*.html", "*.css", "*.js" },
+      callback = function() vim.cmd("silent! write") end,
+    })
+  end,
 }
