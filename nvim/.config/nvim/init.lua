@@ -1,3 +1,3 @@
-vim.opt.runtimepath:append("/Users/callo/.local/share/nvim/site")
+vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
 
 require("callo")
