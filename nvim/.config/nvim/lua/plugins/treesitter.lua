@@ -12,7 +12,7 @@ return {
       "vimdoc", "javascript", "typescript", "c", "lua",
       "rust", "jsdoc", "bash", "html", "css", "tsx",
       "json", "go", "templ", "markdown", "markdown_inline",
-      "glimmer", "svelte",
+      "glimmer", "svelte", "kotlin",
     }
 
     vim.defer_fn(function() ts.install(parsers) end, 0)

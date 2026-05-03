@@ -83,7 +83,6 @@ return {
         cmd          = { "svelteserver", "--stdio" },
         filetypes    = { "svelte" },
         root_markers = { "svelte.config.js", "package.json", ".git" },
-        -- Notify the svelte server when TS/JS files change so it re-checks types
         on_attach = function(client, _)
           vim.api.nvim_create_autocmd("BufWritePost", {
             pattern  = { "*.ts", "*.js" },
@@ -139,7 +138,7 @@ return {
           ["rust-analyzer"] = {
             check       = { command = "clippy" },
             checkOnSave = true,
-            procMacro   = { enable = true }, -- required for view! macro in Leptos
+            procMacro   = { enable = true },
             cargo       = { features = "all" },
           },
         },
@@ -168,5 +167,4 @@ return {
       })
     end,
   },
-
 }
