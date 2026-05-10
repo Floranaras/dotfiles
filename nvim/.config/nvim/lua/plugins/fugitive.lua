@@ -1,7 +1,7 @@
 return {
   "tpope/vim-fugitive",
   config = function()
-    vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+    vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Git Status" })
 
     local group = vim.api.nvim_create_augroup("callo_fugitive", {})
 
@@ -12,19 +12,17 @@ return {
         if vim.bo.ft ~= "fugitive" then return end
 
         local bufnr = vim.api.nvim_get_current_buf()
-        local opts  = { buffer = bufnr, remap = false }
 
-        -- <leader>p shadows the global paste-void remap inside fugitive buffers (intentional)
-        vim.keymap.set("n", "<leader>p", function() vim.cmd.Git("push") end, opts)
-        vim.keymap.set("n", "<leader>P", function()
-          vim.cmd.Git({ "pull", "--rebase" })
-        end, opts)
-        vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts)
+        vim.keymap.set("n", "<leader>p", function() vim.cmd.Git("push") end,
+          { buffer = bufnr, remap = false, desc = "Git Push (Fugitive)" })
+        vim.keymap.set("n", "<leader>P", function() vim.cmd.Git({ "pull", "--rebase" }) end,
+          { buffer = bufnr, remap = false, desc = "Git Pull Rebase (Fugitive)" })
+        vim.keymap.set("n", "<leader>t", ":Git push -u origin ",
+          { buffer = bufnr, remap = false, desc = "Git Push Origin (Fugitive)" })
       end,
     })
 
-    -- Merge conflict resolution: get changes from target (//2) or merge (//3) side
-    vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>")
-    vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>")
+    vim.keymap.set("n", "gu", "<cmd>diffget //2<CR>", { desc = "Get diff from target (left)" })
+    vim.keymap.set("n", "gh", "<cmd>diffget //3<CR>", { desc = "Get diff from merge (right)" })
   end,
 }

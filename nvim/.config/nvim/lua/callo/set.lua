@@ -48,8 +48,7 @@ vim.diagnostic.config({
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = " ",
-      [vim.diagnostic.severity.WARN]  = " ",
-      [vim.diagnostic.severity.HINT]  = "󰠠 ",
+      [vim.diagnostic.severity.WARN]  = " ",[vim.diagnostic.severity.HINT]  = "󰠠 ",
       [vim.diagnostic.severity.INFO]  = " ",
     },
   },
@@ -59,27 +58,3 @@ vim.diagnostic.config({
   float            = { border = "rounded", source = "always", header = "", prefix = "" },
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = {
-    "javascript", "typescript", "javascriptreact", "typescriptreact",
-    "html", "css", "json", "jsx", "tsx", "lua", "svelte",
-  },
-  callback = function()
-    vim.opt_local.tabstop     = 2
-    vim.opt_local.softtabstop = 2
-    vim.opt_local.shiftwidth  = 2
-    vim.opt_local.expandtab   = true
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "c", "cpp" },
-  callback = function()
-    vim.opt_local.tabstop    = 8
-    vim.opt_local.shiftwidth = 8
-    vim.opt_local.expandtab  = false
-    vim.opt_local.cindent    = true
-    vim.opt_local.cinoptions = ":0,l1,t0,+4,(0,u0,w1"
-    vim.opt_local.autoindent = true
-  end,
-})

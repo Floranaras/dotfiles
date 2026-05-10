@@ -50,12 +50,6 @@ return {
       on_attach = function(_, bufnr)
         local opts = { silent = true, buffer = bufnr }
 
-        vim.keymap.set("n", "gd",          vim.lsp.buf.definition,  opts)
-        vim.keymap.set("n", "K",           vim.lsp.buf.hover,       opts)
-        vim.keymap.set("n", "<leader>ca",  vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "<leader>rn",  vim.lsp.buf.rename,      opts)
-
-        -- Wipe the JDTLS index cache and restart; fixes stale state after large refactors
         vim.keymap.set("n", "<leader>jw", function()
           vim.fn.delete(workspace_dir, "rf")
           vim.cmd("JdtlsRestart")

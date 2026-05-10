@@ -1,6 +1,6 @@
 return {
   "nvim-treesitter/nvim-treesitter",
-  branch = "master",
+  branch = "main",
   build = ":TSUpdate",
   config = function()
     require("nvim-treesitter").setup({
@@ -17,6 +17,5 @@ return {
       end,
     })
 
-    vim.treesitter.language.register("templ", "templ")
   end,
 }

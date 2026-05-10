@@ -7,8 +7,7 @@ return {
     opts = {
       debug = false,
       dependencies_bin = {
-        ["typst-preview"] = nil,
-        ["websocat"]      = nil,
+        ["typst-preview"] = nil,["websocat"]      = nil,
       },
       get_root      = function(path) return vim.fn.fnamemodify(path, ":p:h") end,
       get_main_file = function(path) return path end,
@@ -23,11 +22,11 @@ return {
         callback = function()
           local buf = vim.api.nvim_get_current_buf()
 
-          vim.keymap.set("n", "<leader>mt", "<cmd>TypstPreview<CR>",
+          vim.keymap.set("n", "<leader>tp", "<cmd>TypstPreview<CR>",
             { buffer = buf, desc = "Typst: Start Preview" })
-          vim.keymap.set("n", "<leader>mc", "<cmd>TypstPreviewStop<CR>",
+          vim.keymap.set("n", "<leader>tc", "<cmd>TypstPreviewStop<CR>",
             { buffer = buf, desc = "Typst: Stop Preview" })
-          vim.keymap.set("n", "<leader>ms", "<cmd>TypstPreviewSyncCursor<CR>",
+          vim.keymap.set("n", "<leader>ts", "<cmd>TypstPreviewSyncCursor<CR>",
             { buffer = buf, desc = "Typst: Sync Cursor" })
         end,
       })

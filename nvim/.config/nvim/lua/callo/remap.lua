@@ -1,3 +1,5 @@
+local utils = require("callo.utils")
+
 -- Navigation
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
@@ -45,34 +47,15 @@ vim.keymap.set("n", "<leader>ee", "oif err != nil {<CR>}<Esc>Oreturn err<Esc>")
 -- Source config
 vim.keymap.set("n", "<leader><leader>", function() vim.cmd("so") end)
 
--- Explorer
-vim.keymap.set("n", "<leader>pr", function()
-  vim.cmd("Explore " .. vim.fn.getcwd())
-end, { desc = "Project root explorer" })
+-- Explorer & Files
+vim.keymap.set("n", "<leader>pr", function() vim.cmd("Explore " .. vim.fn.getcwd()) end, { desc = "Project root explorer" })
+vim.keymap.set("n", "<leader>nf", utils.new_relative_file, { desc = "New file in current dir" })
+vim.keymap.set("n", "<leader>nF", utils.new_root_file,     { desc = "New file from project root" })
 
--- fnameescape prevents path injection when user input is passed to :edit
-vim.keymap.set("n", "<leader>nf", function()
-  local name = vim.fn.input("New file (relative to current): ")
-  if name == "" then return end
-  vim.cmd.edit(vim.fn.fnameescape(vim.fn.expand("%:p:h") .. "/" .. name))
-end, { desc = "New file in current dir" })
+-- Gradle
+vim.keymap.set("n", "<leader>gr", function() utils.gradle_cmd("run") end,   { desc = "Gradle run" })
+vim.keymap.set("n", "<leader>gb", function() utils.gradle_cmd("build") end, { desc = "Gradle build" })
+vim.keymap.set("n", "<leader>gt", function() utils.gradle_cmd("test") end,  { desc = "Gradle test" })
 
-vim.keymap.set("n", "<leader>nF", function()
-  local name = vim.fn.input("New file (from root): ")
-  if name == "" then return end
-  vim.cmd.edit(vim.fn.fnameescape(vim.fn.getcwd() .. "/" .. name))
-end, { desc = "New file from project root" })
-
--- shellescape handles project paths that contain spaces
-local function gradle_cmd(task)
-  vim.cmd("below terminal cd " .. vim.fn.shellescape(vim.fn.getcwd()) .. " && ./gradlew " .. task)
-end
-
-vim.keymap.set("n", "<leader>gr", function() gradle_cmd("run") end,   { desc = "Gradle run" })
-vim.keymap.set("n", "<leader>gb", function() gradle_cmd("build") end, { desc = "Gradle build" })
-vim.keymap.set("n", "<leader>gt", function() gradle_cmd("test") end,  { desc = "Gradle test" })
-
-vim.keymap.set("n", "<leader>tt", function()
-  vim.cmd("below terminal")
-  vim.cmd("startinsert")
-end, { desc = "Terminal at project root" })
+-- Terminal
+vim.keymap.set("n", "<leader>tt", "<cmd>below terminal<CR>i", { desc = "Terminal at project root" })
