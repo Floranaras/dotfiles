@@ -113,3 +113,15 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 export PATH=$PATH:$(go env GOPATH)/bin
+
+# bun completions
+[ -s "/Users/callo/.bun/_bun" ] && source "/Users/callo/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/Users/callo/.opencode/bin:$PATH
+export PATH="/opt/homebrew/opt/ffmpeg-full/bin:$PATH"
+

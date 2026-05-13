@@ -4,7 +4,7 @@ return {
     event = { "VeryLazy" },
     build = "deno task --quiet build:fast",
     keys  = {
-      { "<leader>mp", function() require("peek").open() end,  desc = "Peek: Open preview" },
+      { "<leader>md", function() require("peek").open() end,  desc = "Peek: Open preview" },
       { "<leader>mc", function() require("peek").close() end, desc = "Peek: Close preview" },
     },
     config = function()
