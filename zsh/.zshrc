@@ -87,6 +87,9 @@ alias g='git'
 compdef g=git
 compdef _git git-purge=git-branch
 
+# Schedule Alias
+alias schd='open /Users/callo/College/Schedule/Y2T3/image.png'
+
 # --- 6. Custom Functions ------------------------------------------------------
 
 # Initialize a Java Gradle project
@@ -125,3 +128,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH=/Users/callo/.opencode/bin:$PATH
 export PATH="/opt/homebrew/opt/ffmpeg-full/bin:$PATH"
 
+
+[ -f "/Users/callo/.ghcup/env" ] && . "/Users/callo/.ghcup/env" # ghcup-env

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-SCREENSHOTS_DIR="$HOME/Pictures/Screenshots"
+SCREENSHOTS_DIR="$HOME/Pictures/"
 
-mkdir -p "$SCREENSHOTS_DIR/screenshots"
-mkdir -p "$SCREENSHOTS_DIR/recordings"
+mkdir -p "$SCREENSHOTS_DIR/Screenshots"
+mkdir -p "$SCREENSHOTS_DIR/Recordings"
 mkdir -p "$SCREENSHOTS_DIR/other"
 
 find "$SCREENSHOTS_DIR" -maxdepth 1 -name 'Screenshot*.png' -exec mv {} "$SCREENSHOTS_DIR/screenshots/" \;

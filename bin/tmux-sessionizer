@@ -12,10 +12,10 @@ SEARCH_PATHS=(
     "$HOME/Dotfiles"
     "$HOME/Github"
     "$HOME/Codes"
-    "$HOME/Documents/college"
+    "$HOME/College"
     "$HOME/Downloads"
-    "$HOME/Pictures/Screenshots/recordings/"
-    "$HOME/Pictures/Screenshots/screenshots/"
+    "$HOME/Pictures/Recordings/"
+    "$HOME/Pictures/Screenshots/"
 )
 
 # --- Functions ---
