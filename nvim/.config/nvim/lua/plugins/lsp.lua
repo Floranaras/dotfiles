@@ -9,7 +9,8 @@ return {
     config = function()
       require("mason").setup()
       local lspconfig = require("lspconfig")
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
+      local has_blink, blink = pcall(require, "blink.cmp")
+      local capabilities = has_blink and blink.get_lsp_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -17,16 +18,60 @@ return {
           "ts_ls", "gopls", "htmx", "rust_analyzer", "svelte",
         },
         handlers = {
-          -- Default handler for simple servers (ts_ls, htmx, clangd, etc.)
           function(server_name)
             lspconfig[server_name].setup({ capabilities = capabilities })
           end,
 
-          -- Custom handlers for servers that need special settings
           ["lua_ls"] = function()
             lspconfig.lua_ls.setup({
               capabilities = capabilities,
               settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+            })
+          end,
+
+          ["ts_ls"] = function()
+            lspconfig.ts_ls.setup({
+              capabilities = capabilities,
+              root_dir = lspconfig.util.root_pattern("tsconfig.json", "package.json", ".git"),
+              init_options = {
+                preferences = {
+                  importModuleSpecifierPreference = "non-relative",
+                  includeCompletionsForModuleExports = true,
+                  includeCompletionsWithSnippetText = true,
+                },
+              },
+              settings = {
+                typescript = {
+                  preferences = {
+                    includeCompletionsForModuleExports = true,
+                    includeCompletionsWithSnippetText = true,
+                  },
+                  inlayHints = {
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                  },
+                },
+                javascript = {
+                  preferences = {
+                    includeCompletionsForModuleExports = true,
+                    includeCompletionsWithSnippetText = true,
+                  },
+                  inlayHints = {
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                  },
+                },
+              },
             })
           end,
 
@@ -60,7 +105,9 @@ return {
               on_attach = function(client, _)
                 vim.api.nvim_create_autocmd("BufWritePost", {
                   pattern = { "*.ts", "*.js" },
-                  callback = function(ctx) client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match }) end,
+                  callback = function(ctx)
+                    client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+                  end,
                 })
               end,
               settings = {
@@ -81,7 +128,13 @@ return {
           ["gopls"] = function()
             lspconfig.gopls.setup({
               capabilities = capabilities,
-              settings = { gopls = { completeUnimported = true, usePlaceholders = true, analyses = { unusedparams = true } } },
+              settings = {
+                gopls = {
+                  completeUnimported = true,
+                  usePlaceholders = true,
+                  analyses = { unusedparams = true },
+                },
+              },
             })
           end,
 
@@ -89,11 +142,16 @@ return {
             lspconfig.rust_analyzer.setup({
               capabilities = capabilities,
               settings = {
-                ["rust-analyzer"] = { check = { command = "clippy" }, checkOnSave = true, procMacro = { enable = true }, cargo = { features = "all" } },
+                ["rust-analyzer"] = {
+                  check = { command = "clippy" },
+                  checkOnSave = true,
+                  procMacro = { enable = true },
+                  cargo = { features = "all" },
+                },
               },
             })
           end,
-        }
+        },
       })
 
       vim.api.nvim_create_autocmd("LspAttach", {
